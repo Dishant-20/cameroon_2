@@ -33,6 +33,13 @@ void main() async {
     print(token);
   }
 
+//
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  //
   FirebaseMessaging.onMessage.listen(
     (event) {
       if (kDebugMode) {
@@ -45,25 +52,9 @@ void main() async {
 
   runApp(
     GetMaterialApp(
-      //
       translations: LocalString(),
-      // supportedLocales: [
-      //   Locale('en'),
-      //   Locale('fr'),
-      // ],
 
       locale: const Locale('en', 'EN'),
-
-      /*localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      //
-      supportedLocales: [
-        Locale('en'), // English
-        Locale('es'), // Spanish
-      ],*/
 
       //
       debugShowCheckedModeBanner: false,
