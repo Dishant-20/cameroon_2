@@ -375,7 +375,7 @@ class _LanguageSelectScreenState extends State<LanguageSelectScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const Dashboard2Screen(),
+          builder: (context) => const PageControlScreen(),
         ),
       );
     } else {
