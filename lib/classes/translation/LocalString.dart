@@ -75,7 +75,8 @@ class LocalString extends Translations {
           'christanity': 'Christanity',
           'protestants': 'Protestant',
           'mormons': 'Mormons',
-          'nearby_friend': 'Nearby Friends'
+          'nearby_friend': 'Nearby Friends',
+          'notification': 'Notifications'
         },
         'fr_FR': {
           'Get Started Now': 'Commencez maintenant',
@@ -153,7 +154,8 @@ class LocalString extends Translations {
           'christanity': 'Christianisme',
           'protestants': 'Protestante',
           'mormons': 'Mormones',
-          'nearby_friend': 'Amis à proximité'
+          'nearby_friend': 'Amis à proximité',
+          'notification': 'Avis'
         }
       };
 }

@@ -11,6 +11,7 @@ import 'package:cameroon_2/classes/help/help.dart';
 import 'package:cameroon_2/classes/language_select/language_select.dart';
 import 'package:cameroon_2/classes/login/login.dart';
 import 'package:cameroon_2/classes/matched/matches.dart';
+import 'package:cameroon_2/classes/notifications/notifications.dart';
 import 'package:cameroon_2/classes/subscription/subscription.dart';
 import 'package:cameroon_2/classes/translation/LocalString.dart';
 import 'package:flutter/material.dart';
@@ -298,6 +299,45 @@ class _navigationDrawerState extends State<navigationDrawer> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => const SubscriptionScreen(),
+                      ),
+                    );
+
+                    // ...
+                    // Then close the drawer
+                    // Navigator.pop(context);
+                  },
+                ),
+                //
+                Container(
+                  margin: const EdgeInsets.only(left: 20),
+                  height: 1,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                ),
+                //
+                ListTile(
+                  leading: const Icon(
+                    Icons.notifications,
+                    color: Colors.white,
+                  ),
+                  iconColor: Colors.white,
+                  title: Text(
+                    //
+                    'Notifications',
+                    //
+                    style: TextStyle(
+                      fontFamily: font_family_name,
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  onTap: () {
+                    // Update the state of the app
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NotificationScreen(),
                       ),
                     );
 

@@ -155,3 +155,6 @@ var text_chatholic = 'catholic'.tr;
 
 // nearby friend
 var text_nearby_friend = 'nearby_friend'.tr;
+
+// notifications
+var text_notification = 'notification'.tr;
