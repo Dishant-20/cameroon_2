@@ -66,6 +66,7 @@ dependencies:
   google_fonts: ^4.0.3
   get:
   intl: any
+  adobe_xd: ^2.0.1
   flutter_localizations:
     sdk: flutter
    
