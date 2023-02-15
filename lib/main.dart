@@ -35,7 +35,9 @@ void main() async {
 
   FirebaseMessaging.onMessage.listen(
     (event) {
-      print("event ${event.notification!.body}");
+      if (kDebugMode) {
+        print("event ${event.notification!.body}");
+      }
     },
   );
 
