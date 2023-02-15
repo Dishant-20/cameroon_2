@@ -101,7 +101,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text(
-          'Membership', //.toUpperCase(),
+          //
+          text_subscription,
+          //
           style: TextStyle(
             fontFamily: font_family_name,
           ),
