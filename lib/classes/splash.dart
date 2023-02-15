@@ -74,6 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
+// add comment
   func_push_to_next_screen() {
     Navigator.push(
       context,
