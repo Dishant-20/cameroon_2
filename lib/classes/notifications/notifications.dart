@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:cameroon_2/classes/custom/drawer/drawer.dart';
+import 'package:cameroon_2/classes/profile_details/profile_details.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:cameroon_2/classes/header/utils/Utils.dart';
@@ -268,11 +269,26 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                     Center(
                       child: InkWell(
-                        onTap: () async {
+                        onTap: () {
                           //
                           if (kDebugMode) {
                             print(arr_notification_list[i].toString());
                           }
+                          //
+                          if (kDebugMode) {
+                            print('me');
+                          }
+                          //
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileDetailsScreen(
+                                str_user_profile_id: arr_notification_list[i]
+                                        ['userId']
+                                    .toString(),
+                              ),
+                            ),
+                          );
                           //
                           // push_to_chat(context, i);
                           //
@@ -284,7 +300,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             borderRadius: BorderRadius.circular(
                               25,
                             ),
-                            gradient: const LinearGradient(
+                            /*gradient: const LinearGradient(
                               colors: [
                                 Color.fromRGBO(170, 0, 20, 1),
                                 Color.fromRGBO(180, 30, 20, 1),
@@ -296,13 +312,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
-                            ),
+                            ),*/
                           ),
                           width: 50,
                           height: 50,
                           child: const Icon(
-                            Icons.chat,
-                            color: Colors.white,
+                            Icons.chevron_right,
+                            color: Colors.black,
                           ),
                         ),
                       ),

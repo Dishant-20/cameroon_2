@@ -1,5 +1,11 @@
 // import 'package:dust_trip_it/controllers/login/login.dart';
 // import 'package:dust_trip_it/controllers/splash/splash.dart';
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
+// import 'dart:js';
+
+import 'package:cameroon_2/classes/notifications/notifications.dart';
+import 'package:cameroon_2/classes/page_control/page_control.dart';
 import 'package:cameroon_2/classes/splash.dart';
 import 'package:cameroon_2/classes/translation/LocalString.dart';
 import 'package:flutter/foundation.dart';
@@ -15,10 +21,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:get/get.dart';
 
+RemoteMessage? initialMessage;
 FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
 void main() async {
-  //
   //
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -26,6 +32,22 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // show notification alert ( banner )
+  NotificationSettings settings = await _firebaseMessaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  if (kDebugMode) {
+    print('User granted permission =====> ${settings.authorizationStatus}');
+  }
+  //
+  //
   final token = await _firebaseMessaging.getToken();
   //
   //
@@ -33,22 +55,57 @@ void main() async {
     print(token);
   }
 
-//
+  // background access
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // foreground access
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
     sound: true,
   );
+
+  // CLICK ON NOTIFICATION EITHER IN FOREGORUND OR BACKGROUN
+  FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) {
+    print('=====> CLICK NOTIFICATION <=====');
+
+    /*Navigator.pushNamed(context, '/chat',
+          arguments: ChatArguments(message));*/
+
+    // showAboutDialog(context: context);
+    // Navigator.push(
+    //   (  context),
+    //   MaterialPageRoute(
+    //     builder: (context) => const NotificationScreen(),
+    //   ),
+    // );
+  });
+
   //
+  //
+  // notification data print here
   FirebaseMessaging.onMessage.listen(
-    (event) {
-      if (kDebugMode) {
-        print("event ${event.notification!.body}");
+    (RemoteMessage message) {
+      // if (kDebugMode) {
+      print("notification 2 ====> ${message.notification!.body}");
+
+      print('Handling a foreground message ${message.messageId}');
+      print('Notification Message: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
       }
+
+      //
+      //.. rest of your code
+      // NotificationService.showNotification(message);
+
+      // }
+    },
+    onDone: () {
+      print('am i done');
     },
   );
-
-// add something ?
 
   runApp(
     GetMaterialApp(
@@ -61,4 +118,15 @@ void main() async {
       home: const SplashScreen(),
     ),
   );
+}
+
+void showDialog(BuildContext context, Map<String, dynamic> message) {
+  // data
+  print('show');
+}
+
+Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  if (kDebugMode) {
+    print("Handling a background message: ${message.messageId}");
+  }
 }

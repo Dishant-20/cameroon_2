@@ -33,6 +33,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   var custom_arr = [];
   List<String> arr_scroll_multiple_images = [];
   //
+  var str_already_like = '0';
+  //
   var str_user_profile_loader = '0';
   //
   var str_show_ui = '0';
@@ -41,7 +43,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   var arr_image_count = [];
   //
   var str_image = '';
-  var str_both_profile_matched = 'No';
+  var str_both_profile_matched = 'Yes';
   var str_name = '';
   var str_address = '';
   var str_gender = '';
@@ -113,7 +115,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
         for (int i = 0; i < arr_image_count.length; i++) {
           arr_scroll_multiple_images.add(arr_image_count[i]['image']);
         }
-//
+        //
         str_image = get_data['data']['image'].toString();
         str_name = get_data['data']['fullName'].toString();
         str_gender = get_data['data']['gender'].toString();
@@ -196,6 +198,65 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     }
   }
 
+//
+  func_like_this_profile_WB() {
+    if (kDebugMode) {
+      print('like');
+    }
+
+    //
+    func_like_user_WB('1');
+  }
+
+  //
+  func_like_user_WB(
+    String status,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'like',
+          'userId': prefs.getInt('userId').toString(),
+          'likeId': widget.str_user_profile_id.toString(),
+          'status': status.toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+        /*setState(() {
+          str_user_profile_loader = '0';
+        });*/
+        //
+        profile_details_WB();
+        //
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
+  }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -238,6 +299,23 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
             ),
           ),
         ),
+        actions: [
+          (str_both_profile_matched == 'Yes')
+              ? const SizedBox()
+              : IconButton(
+                  onPressed: () {
+                    if (kDebugMode) {
+                      print('heart click');
+                    }
+                    //
+                    func_like_this_profile_WB();
+                    //
+                  },
+                  icon: const Icon(
+                    Icons.favorite_border,
+                  ),
+                ),
+        ],
       ),
       // drawer: ProfileDetailsScreen,
       body: SingleChildScrollView(
