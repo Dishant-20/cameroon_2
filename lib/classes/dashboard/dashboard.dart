@@ -367,7 +367,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     height: 70,
                                     child: IconButton(
                                       onPressed: () {
-                                        Navigator.push(
+                                        /*Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
@@ -378,7 +378,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                       .toString(),
                                             ),
                                           ),
-                                        );
+                                        );*/
                                       },
                                       icon: const Icon(
                                         Icons.info,

@@ -17,8 +17,12 @@ import 'package:flutter/material.dart';
 import '../gallery/enlarge_image/enlarge_image.dart';
 
 class ProfileDetailsScreen extends StatefulWidget {
-  const ProfileDetailsScreen({super.key, required this.str_user_profile_id});
+  const ProfileDetailsScreen(
+      {super.key,
+      required this.str_user_profile_id,
+      required this.str_profile_notification});
 
+  final String str_profile_notification;
   final String str_user_profile_id;
 
   @override
@@ -198,14 +202,18 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     }
   }
 
-//
+  //
   func_like_this_profile_WB() {
     if (kDebugMode) {
       print('like');
     }
 
+    setState(() {
+      str_user_profile_loader = '0';
+    });
     //
     func_like_user_WB('1');
+    //
   }
 
   //
@@ -300,21 +308,23 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
           ),
         ),
         actions: [
-          (str_both_profile_matched == 'Yes')
+          (widget.str_profile_notification == 'no')
               ? const SizedBox()
-              : IconButton(
-                  onPressed: () {
-                    if (kDebugMode) {
-                      print('heart click');
-                    }
-                    //
-                    func_like_this_profile_WB();
-                    //
-                  },
-                  icon: const Icon(
-                    Icons.favorite_border,
-                  ),
-                ),
+              : (str_both_profile_matched == 'Yes')
+                  ? const SizedBox()
+                  : IconButton(
+                      onPressed: () {
+                        if (kDebugMode) {
+                          print('heart click');
+                        }
+                        //
+                        func_like_this_profile_WB();
+                        //
+                      },
+                      icon: const Icon(
+                        Icons.favorite_border,
+                      ),
+                    ),
         ],
       ),
       // drawer: ProfileDetailsScreen,

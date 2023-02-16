@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:your_own_words/pages/splash/splash.dart';
 // import 'package:your_own_words/pages/public_chat_screen/chat_screen.dart';
 // import 'package:your_own_words/pages/welcome/welcome.dart';
@@ -54,6 +55,10 @@ void main() async {
   if (kDebugMode) {
     print(token);
   }
+  // save token locally
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  preferences.setString('deviceToken', token.toString());
+  //
 
   // background access
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -67,18 +72,9 @@ void main() async {
 
   // CLICK ON NOTIFICATION EITHER IN FOREGORUND OR BACKGROUN
   FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) {
-    print('=====> CLICK NOTIFICATION <=====');
-
-    /*Navigator.pushNamed(context, '/chat',
-          arguments: ChatArguments(message));*/
-
-    // showAboutDialog(context: context);
-    // Navigator.push(
-    //   (  context),
-    //   MaterialPageRoute(
-    //     builder: (context) => const NotificationScreen(),
-    //   ),
-    // );
+    if (kDebugMode) {
+      print('=====> CLICK NOTIFICATION <=====');
+    }
   });
 
   //
@@ -87,13 +83,22 @@ void main() async {
   FirebaseMessaging.onMessage.listen(
     (RemoteMessage message) {
       // if (kDebugMode) {
-      print("notification 2 ====> ${message.notification!.body}");
+      if (kDebugMode) {
+        print("notification 2 ====> ${message.notification!.body}");
+      }
 
-      print('Handling a foreground message ${message.messageId}');
-      print('Notification Message: ${message.data}');
+      if (kDebugMode) {
+        print('Handling a foreground message ${message.messageId}');
+      }
+      if (kDebugMode) {
+        print('Notification Message: ${message.data}');
+      }
 
       if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
+        if (kDebugMode) {
+          print(
+              'Message also contained a notification: ${message.notification}');
+        }
       }
 
       //

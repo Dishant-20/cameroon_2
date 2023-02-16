@@ -83,6 +83,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                           builder: (context) => ProfileDetailsScreen(
                             str_user_profile_id:
                                 draggableItems[index].id.toString(),
+                            str_profile_notification: 'no',
                           ),
                         ),
                       );

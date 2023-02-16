@@ -40,6 +40,7 @@ class LoginModal {
           'action': 'login',
           'email': email_address,
           'password': password,
+          'deviceToken': prefs.getString('deviceToken').toString(),
         },
       ),
     );

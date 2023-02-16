@@ -489,6 +489,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
       MaterialPageRoute(
         builder: (context) => ProfileDetailsScreen(
           str_user_profile_id: arr_swipe[i]['userId'].toString(),
+          str_profile_notification: 'no',
         ),
       ),
     );

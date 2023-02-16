@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:cameroon_2/classes/nearby_friends/nearby_friends.dart';
 import 'package:cameroon_2/classes/new_user_profile/new_user_profile.dart';
 import 'package:cameroon_2/classes/profile_details/profile_details.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -61,23 +62,7 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
     String str_lat,
     String str_long,
   ) async {
-    // print('object');
-
-    // setState(() {
-    //   str_save_and_continue_loader = '0';
-    // });
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    /*print(prefs.getString('interent_in').toString());
-    var str_interest_in;
-    if (prefs.getString('interent_in').toString() == '1') {
-      str_interest_in = 'Male';
-    } else if (prefs.getString('interent_in').toString() == '2') {
-      str_interest_in = 'Female';
-    } else if (prefs.getString('interent_in').toString() == '3') {
-      str_interest_in = 'Other';
-    }*/
 
     final resposne = await http.post(
       Uri.parse(
@@ -111,6 +96,124 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
           arr_swipe.add(i);
         }
 
+        //
+        profile_details_WB();
+        //
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
+  }
+
+  //
+  //
+  profile_details_WB() async {
+    print('=====> POST : MY PROFILE LIST');
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'profile',
+          'ownId': prefs.getInt('userId').toString(),
+          'userId': prefs.getInt('userId').toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+
+        print(get_data['data']['deviceToken'].toString());
+
+        if (get_data['data']['deviceToken'].toString() == '') {
+          //
+          edit_profile_WB();
+          //
+        } else if (get_data['data']['deviceToken'].toString() == 'null') {
+          //
+          if (kDebugMode) {
+            print('null');
+          }
+          edit_profile_WB();
+          //
+        } else {
+          if (arr_swipe.isEmpty) {
+            setState(() {
+              str_save_and_continue_loader = '2';
+            });
+          } else {
+            setState(() {
+              str_save_and_continue_loader = '1';
+            });
+          }
+        }
+
+        //
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
+  }
+
+  //
+  //
+  edit_profile_WB() async {
+    print('=====> POST : EDIT PROFILE');
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'editprofile',
+          'userId': prefs.getInt('userId').toString(),
+          'deviceToken': prefs.getString('deviceToken').toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+        print(prefs.getString('deviceToken'));
+        //
         if (arr_swipe.isEmpty) {
           setState(() {
             str_save_and_continue_loader = '2';
@@ -498,6 +601,8 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
                                                     str_user_profile_id:
                                                         arr_swipe[index]['id']
                                                             .toString(),
+                                                    str_profile_notification:
+                                                        'no',
                                                   ),
                                                 ),
                                               );

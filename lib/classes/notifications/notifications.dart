@@ -286,6 +286,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 str_user_profile_id: arr_notification_list[i]
                                         ['userId']
                                     .toString(),
+                                str_profile_notification: 'yes',
                               ),
                             ),
                           );
