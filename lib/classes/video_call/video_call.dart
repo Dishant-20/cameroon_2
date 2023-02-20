@@ -44,6 +44,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
 // Clean up the resources when you leave
   @override
   void dispose() async {
+    // if (mounted)
     await agoraEngine.leaveChannel();
     super.dispose();
   }
@@ -141,7 +142,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
       );
     } else {
       return const Text(
-        'Join a channel',
+        'Click join to Join',
         textAlign: TextAlign.center,
       );
     }
@@ -159,7 +160,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
       );
     } else {
       String msg = '';
-      if (_isJoined) msg = 'Waiting for a remote user to join';
+      if (_isJoined) msg = 'calling...';
       return Text(
         msg,
         textAlign: TextAlign.center,

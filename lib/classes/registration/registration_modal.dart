@@ -45,6 +45,9 @@ class RegistrationModel {
     String email_address,
     String password,
   ) async {
+    //
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //
     final response = await http.post(
       Uri.parse(
         application_base_url,
@@ -62,6 +65,7 @@ class RegistrationModel {
           'role': 'Member',
           'latitude': '20',
           'longitude': '30',
+          'deviceToken': prefs.getString('deviceToken').toString(),
         },
       ),
     );

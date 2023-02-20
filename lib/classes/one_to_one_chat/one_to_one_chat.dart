@@ -62,6 +62,17 @@ class _OneToOneChatScreenState extends State<OneToOneChatScreen> {
     //
   }
 
+  @override
+  void dispose() {
+    /*await agoraEngine.leaveChannel().then((value) => {
+          Navigator.pop(context),
+        });*/
+    // await agoraEngine.leaveChannel();
+
+    dispose();
+    super.dispose();
+  }
+
 // create room
   func_create_room_id() {
     room_id = '${widget.str_get_friend_id}+${widget.str_get_login_user_id}';
@@ -143,13 +154,19 @@ class _OneToOneChatScreenState extends State<OneToOneChatScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
+                    builder: (context) => const AudioCallScreen(),
+                  ),
+                );
+                /*Navigator.push(
+                  context,
+                  MaterialPageRoute(
                     builder: (context) => AudioCallScreen(
                       str: widget.str_get_friend_name.toString(),
                       str_friend_name: widget.str_get_friend_name.toString(),
                       str_channel_name: room_id.toString(),
                     ),
                   ),
-                );
+                );*/
               },
               icon: const Icon(
                 Icons.call,

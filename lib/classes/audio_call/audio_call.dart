@@ -1,5 +1,5 @@
 // ignore_for_file: unused_field, prefer_final_fields, non_constant_identifier_names
-
+/*
 import 'dart:async';
 
 import 'package:cameroon_2/classes/header/utils/Utils.dart';
@@ -24,8 +24,7 @@ class AudioCallScreen extends StatefulWidget {
   State<AudioCallScreen> createState() => _AudioCallScreenState();
 }
 
-class _AudioCallScreenState extends State<AudioCallScreen>
-    with TickerProviderStateMixin {
+class _AudioCallScreenState extends State<AudioCallScreen> {
   String token = "";
 
   int uid = 0; // uid of the local user
@@ -40,7 +39,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   //
   String appId = "bbe938fe04a746fd9019971106fa51ff";
   //
-  var str_start_timer = '0';
+  var str_start_timer = 'calling...';
   //
   // showMessage(String message) {
   //   scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
@@ -52,12 +51,16 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   // late Timer _timer;
   // int _start = 10;
   //
+  String time = "";
+  //
   var str_end_call_button_status = '0';
   //
   @override
   void initState() {
     super.initState();
+    // if (mounted) {
     setupVoiceSDKEngine();
+    // }
     //
 
     // Timer scheduleTimeout([int milliseconds = 4]) =>
@@ -71,15 +74,16 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   // }
 
   // Clean up the resources when you leave
-  @override
-  void dispose() async {
+  /*@override
+  void dispose() {
     /*await agoraEngine.leaveChannel().then((value) => {
           Navigator.pop(context),
         });*/
-    await agoraEngine.leaveChannel();
+    // await agoraEngine.leaveChannel();
+
     dispose();
     super.dispose();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +92,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
         automaticallyImplyLeading: false,
         title: Text(
           //
-          'Auido Call',
+          'Audio Call',
           //
           style: TextStyle(
             fontFamily: font_family_name,
@@ -99,7 +103,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
             if (kDebugMode) {
               print('');
             }
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
           icon: const Icon(
             Icons.chevron_left,
@@ -303,7 +307,10 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                         child: Text(
                           // 'calling...',
                           //
-                          str_start_timer,
+                          // str_start_timer,
+                          '',
+                          // time,
+                          //
                           //
                           style: TextStyle(
                             fontFamily: font_family_name,
@@ -336,19 +343,31 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   Widget _status() {
     var statusText;
 
-    print('=====> dishant rajput <=====');
+    if (kDebugMode) {
+      print('=====> dishant rajput <=====');
+    }
     if (kDebugMode) {
       print(statusText);
     }
 
     if (!_isJoined) {
-      statusText = 'Join a channel';
+      //
+      statusText = 'call ended';
+      //
     } else if (_remoteUid == null) {
       // statusText = 'Waiting for a remote user to join...';
-      statusText = widget.str + 'disconnected';
-    } else
-      // statusText = 'Connected to remote user, uid:$_remoteUid';
-      statusText = widget.str;
+      //
+      str_start_timer = '${widget.str.toUpperCase()} disconnect the call';
+      //
+      statusText =
+          'calling...'; //'${widget.str.toUpperCase()} disconnect the call';
+    } else {
+      statusText = '${widget.str.toUpperCase()} on call';
+    }
+    //
+    str_start_timer = 'Joined';
+    //
+    // func_call_timer();
 
     return Text(
       statusText,
@@ -364,8 +383,11 @@ class _AudioCallScreenState extends State<AudioCallScreen>
     agoraEngine = createAgoraRtcEngine();
     await agoraEngine.initialize(RtcEngineContext(appId: appId));
 
-    // CALL AUTOMATIC AFTER INIT
-    join();
+    Timer(Duration(seconds: 3), () {
+      //checkFirstSeen(); your logic
+      print('5 seconds done');
+      join();
+    });
 
     // Register the event handler
     agoraEngine.registerEventHandler(
@@ -375,15 +397,21 @@ class _AudioCallScreenState extends State<AudioCallScreen>
           //     "Local user uid:${connection.localUid} joined the channel");
           // "Dishu Join",
           // );
-          print('JOINED');
+          if (kDebugMode) {
+            print('JOINED');
+          }
           setState(() {
             _isJoined = true;
           });
         },
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          print('======> IS USER JOINED ?');
+          if (kDebugMode) {
+            print('======> IS USER JOINED ?');
+          }
           // showMessage("Remote user uid:$remoteUid joined the channel");
-          print("Remote user uid:$remoteUid joined the channel");
+          if (kDebugMode) {
+            print("Remote user uid:$remoteUid joined the channel");
+          }
           setState(() {
             // str_start_timer = '1';
             _remoteUid = remoteUid;
@@ -392,7 +420,9 @@ class _AudioCallScreenState extends State<AudioCallScreen>
         onUserOffline: (RtcConnection connection, int remoteUid,
             UserOfflineReasonType reason) {
           // showMessage("Remote user uid:$remoteUid left the channel");
-          print("Remote user uid:$remoteUid left the channel");
+          if (kDebugMode) {
+            print("Remote user uid:$remoteUid left the channel");
+          }
           setState(() {
             _remoteUid = null;
           });
@@ -402,14 +432,17 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   }
 
   // join
-  void join() async {
+  void join() {
+    if (kDebugMode) {
+      print('=====> IS USER JOIN ? ');
+    }
     // Set channel options including the client role and channel profile
     ChannelMediaOptions options = const ChannelMediaOptions(
       clientRoleType: ClientRoleType.clientRoleBroadcaster,
       channelProfile: ChannelProfileType.channelProfileCommunication,
     );
 
-    await agoraEngine.joinChannel(
+    agoraEngine.joinChannel(
       token: token,
       // channelId: widget.str_channel_name.toString(),
       channelId: 'dishu_1234'.toString(),
@@ -420,6 +453,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
 
 // leave
   void leave() {
+    // if (mounted) {
     setState(() {
       _isJoined = false;
       _remoteUid = null;
@@ -428,6 +462,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
     /*.then((value) => {
           Navigator.pop(context),
         });*/
+    // }
   }
 
   func_get_initials(String str_name) {
@@ -444,5 +479,202 @@ class _AudioCallScreenState extends State<AudioCallScreen>
       final_initial_name = initials_are[0][0].toString().toUpperCase();
     }
     return final_initial_name;
+  }
+}
+*/
+
+import 'dart:async';
+
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+class AudioCallScreen extends StatefulWidget {
+  const AudioCallScreen({super.key});
+
+  @override
+  State<AudioCallScreen> createState() => _AudioCallScreenState();
+}
+
+const String appId = "bbe938fe04a746fd9019971106fa51ff";
+
+class _AudioCallScreenState extends State<AudioCallScreen> {
+  //
+  @override
+  void initState() {
+    super.initState();
+    // Set up an instance of Agora engine
+    setupVoiceSDKEngine();
+  }
+
+  String channelName = "<--Insert channel name here-->";
+  String token = "<--Insert authentication token here-->";
+
+  int uid = 0; // uid of the local user
+
+  int? _remoteUid; // uid of the remote user
+  bool _isJoined = false; // Indicates if the local user has joined the channel
+  late RtcEngine agoraEngine; // Agora engine instance
+
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>(); // Global key to access the scaffold
+
+  showMessage(String message) {
+    scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
+      content: Text(message),
+    ));
+  }
+
+//
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      children: [
+        // Status text
+        Container(
+          height: 40,
+          child: Center(
+            child: _status(),
+          ),
+        ),
+        // Spacer(),
+        // Button Row
+        Center(
+          child: Container(
+            margin: const EdgeInsets.all(10.0),
+            color: Colors.amber[600],
+            width: 48.0,
+            height: 48.0,
+            child: IconButton(
+              onPressed: () {
+                print('');
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.chevron_left,
+              ),
+            ),
+          ),
+        ),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: ElevatedButton(
+                child: const Text("Join"),
+                onPressed: () => {join()},
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: ElevatedButton(
+                child: const Text("Leave"),
+                onPressed: () => {leave()},
+              ),
+            ),
+          ],
+        ),
+      ],
+    ));
+  }
+
+  //
+  Widget _status() {
+    String statusText;
+
+    if (!_isJoined)
+      statusText = 'Join a channel';
+    else if (_remoteUid == null)
+      statusText = 'Waiting for a remote user to join...';
+    else
+      statusText = 'Connected to remote user, uid:$_remoteUid';
+
+    return Text(
+      statusText,
+    );
+  }
+
+//
+  Future<void> setupVoiceSDKEngine() async {
+    // retrieve or request microphone permission
+    await [Permission.microphone].request();
+
+    //create an instance of the Agora engine
+    agoraEngine = createAgoraRtcEngine();
+    await agoraEngine.initialize(const RtcEngineContext(appId: appId));
+
+    // Register the event handler
+    agoraEngine.registerEventHandler(
+      RtcEngineEventHandler(
+        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
+          showMessage(
+              "Local user uid:${connection.localUid} joined the channel");
+          setState(() {
+            _isJoined = true;
+          });
+        },
+        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+          showMessage("Remote user uid:$remoteUid joined the channel");
+          setState(() {
+            _remoteUid = remoteUid;
+          });
+        },
+        onUserOffline: (RtcConnection connection, int remoteUid,
+            UserOfflineReasonType reason) {
+          showMessage("Remote user uid:$remoteUid left the channel");
+          setState(() {
+            _remoteUid = null;
+          });
+        },
+      ),
+    );
+  }
+
+  //
+  void join() async {
+    // Set channel options including the client role and channel profile
+    ChannelMediaOptions options = const ChannelMediaOptions(
+      clientRoleType: ClientRoleType.clientRoleBroadcaster,
+      channelProfile: ChannelProfileType.channelProfileCommunication,
+    );
+
+    await agoraEngine.joinChannel(
+      token: token,
+      channelId: channelName,
+      options: options,
+      uid: uid,
+    );
+  }
+
+//
+  void leave() {
+    setState(() {
+      _isJoined = false;
+      _remoteUid = null;
+    });
+    agoraEngine.leaveChannel();
+    //
+    // Timer.periodic(Duration(seconds: 1), (timer) {
+    //   if (DateTime.now().second == 4) {
+    //     //Stop if second equal to 4
+    //     timer.cancel();
+    //   }
+    //   // setState(() {
+    //   // greeting = "After Some time ${DateTime.now().second}";
+    //   // });
+    // });
+    //
+  }
+
+//
+// Clean up the resources when you leave
+  @override
+  void dispose() async {
+    // Timer()
+    // Timer.
+    await agoraEngine.leaveChannel();
+    super.dispose();
   }
 }

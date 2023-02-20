@@ -155,11 +155,12 @@ class _LanguageSelectScreenState extends State<LanguageSelectScreen> {
                               height: 50,
                               width: 50,
                               decoration: BoxDecoration(
-                                color: Colors.redAccent,
+                                color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(
                                   23,
                                 ),
                               ),
+                              child: Image.asset('assets/images/france.png'),
                             ),
                             const SizedBox(
                               width: 10,
@@ -226,11 +227,13 @@ class _LanguageSelectScreenState extends State<LanguageSelectScreen> {
                               height: 50,
                               width: 50,
                               decoration: BoxDecoration(
-                                color: Colors.redAccent,
+                                color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(
                                   23,
                                 ),
                               ),
+                              child: Image.asset(
+                                  'assets/images/united-kingdom.png'),
                             ),
                             const SizedBox(
                               width: 10,

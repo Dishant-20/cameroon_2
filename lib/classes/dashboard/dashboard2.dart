@@ -143,6 +143,7 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         //
 
+        print('object object object object ');
         print(get_data['data']['deviceToken'].toString());
 
         if (get_data['data']['deviceToken'].toString() == '') {
@@ -187,6 +188,12 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    var str_d_t = '';
+    if (prefs.getString('deviceToken').toString() == 'null') {
+      print('i am null');
+    } else {
+      print('i am null 2');
+    }
     final resposne = await http.post(
       Uri.parse(
         application_base_url,
@@ -709,14 +716,14 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
 
     // convert data to dict
     var get_data = jsonDecode(resposne.body);
-    print(get_data);
+    if (kDebugMode) {
+      print(get_data);
+    }
 
     if (resposne.statusCode == 200) {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         //
-
         func_move_to_next_partner();
-
         //
       } else {
         print(

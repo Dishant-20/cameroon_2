@@ -1,5 +1,6 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:cameroon_2/classes/custom/appbar/custom_pop_up/custom_loader.dart';
 import 'package:cameroon_2/classes/one_to_one_chat/one_to_one_chat.dart';
@@ -55,12 +56,28 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   var str_age = '';
   var str_interested_in = '';
   //
+  // late Timer myTimer;
+  // Duration myDuration = Duration();
+  //
   @override
   void initState() {
     super.initState();
     //
     profile_details_WB();
     //
+    // startTimer();
+    //
+  }
+
+  @override
+  void dispose() {
+    /*await agoraEngine.leaveChannel().then((value) => {
+          Navigator.pop(context),
+        });*/
+    // await agoraEngine.leaveChannel();
+    if (mounted) {}
+    dispose();
+    super.dispose();
   }
 
   //
@@ -188,9 +205,16 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
           ];
         }
 
+        //
         setState(() {
+          print('i am last');
+          print(str_both_profile_matched);
           str_user_profile_loader = '1';
         });
+
+        //
+        // Navigator.pop(context);
+        //
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -208,9 +232,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
       print('like');
     }
 
-    setState(() {
-      str_user_profile_loader = '0';
-    });
     //
     func_like_user_WB('1');
     //
@@ -220,6 +241,13 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   func_like_user_WB(
     String status,
   ) async {
+    //
+    setState(() {
+      // print('yes like clicked');
+      str_user_profile_loader = '0';
+    });
+    //
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final resposne = await http.post(
@@ -308,6 +336,19 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
           ),
         ),
         actions: [
+          /*IconButton(
+            onPressed: () {
+              if (kDebugMode) {
+                print('heart click');
+              }
+              //
+              func_like_this_profile_WB();
+              //
+            },
+            icon: const Icon(
+              Icons.favorite_border,
+            ),
+          ),*/
           (widget.str_profile_notification == 'no')
               ? const SizedBox()
               : (str_both_profile_matched == 'Yes')

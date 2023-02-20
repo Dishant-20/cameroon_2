@@ -53,7 +53,11 @@ void main() async {
   //
   //
   if (kDebugMode) {
+    print('=============> HERE IS MY DEVICE TOKEN <=============');
+    print('======================================================');
     print(token);
+    print('======================================================');
+    print('======================================================');
   }
   // save token locally
   SharedPreferences preferences = await SharedPreferences.getInstance();
