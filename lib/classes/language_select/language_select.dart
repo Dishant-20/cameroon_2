@@ -166,7 +166,7 @@ class _LanguageSelectScreenState extends State<LanguageSelectScreen> {
                               width: 10,
                             ),
                             text_with_bold_style(
-                              'France',
+                              'French',
                             ),
                             //
                             const Spacer(),

@@ -4,8 +4,8 @@
 
 // import 'dart:js';
 
-import 'package:cameroon_2/classes/notifications/notifications.dart';
-import 'package:cameroon_2/classes/page_control/page_control.dart';
+// import 'package:cameroon_2/classes/notifications/notifications.dart';
+// import 'package:cameroon_2/classes/page_control/page_control.dart';
 import 'package:cameroon_2/classes/splash.dart';
 import 'package:cameroon_2/classes/translation/LocalString.dart';
 import 'package:flutter/foundation.dart';
@@ -14,11 +14,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'firebase_options.dart';
 // import 'package:your_own_words/pages/splash/splash.dart';
 // import 'package:your_own_words/pages/public_chat_screen/chat_screen.dart';
 // import 'package:your_own_words/pages/welcome/welcome.dart';
-import 'firebase_options.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+
+// import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:get/get.dart';
 
@@ -50,6 +51,7 @@ void main() async {
   //
   //
   final token = await _firebaseMessaging.getToken();
+
   //
   //
   if (kDebugMode) {
@@ -74,47 +76,8 @@ void main() async {
     sound: true,
   );
 
-  // CLICK ON NOTIFICATION EITHER IN FOREGORUND OR BACKGROUN
-  FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) {
-    if (kDebugMode) {
-      print('=====> CLICK NOTIFICATION <=====');
-    }
-  });
-
   //
   //
-  // notification data print here
-  FirebaseMessaging.onMessage.listen(
-    (RemoteMessage message) {
-      // if (kDebugMode) {
-      if (kDebugMode) {
-        print("notification 2 ====> ${message.notification!.body}");
-      }
-
-      if (kDebugMode) {
-        print('Handling a foreground message ${message.messageId}');
-      }
-      if (kDebugMode) {
-        print('Notification Message: ${message.data}');
-      }
-
-      if (message.notification != null) {
-        if (kDebugMode) {
-          print(
-              'Message also contained a notification: ${message.notification}');
-        }
-      }
-
-      //
-      //.. rest of your code
-      // NotificationService.showNotification(message);
-
-      // }
-    },
-    onDone: () {
-      print('am i done');
-    },
-  );
 
   runApp(
     GetMaterialApp(
