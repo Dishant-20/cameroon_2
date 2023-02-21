@@ -6,7 +6,7 @@ import 'dart:io';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cameroon_2/classes/gallery/enlarge_image/enlarge_image.dart';
-import 'package:cameroon_2/classes/get_started_now/get_started_now.dart';
+// import 'package:cameroon_2/classes/get_started_now/get_started_now.dart';
 import 'package:flutter/foundation.dart';
 // import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 // import 'package:http/http.dart';

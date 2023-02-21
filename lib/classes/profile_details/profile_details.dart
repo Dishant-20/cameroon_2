@@ -478,6 +478,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                                         .toString(),
                                                 str_get_friend_name:
                                                     str_name.toString(),
+                                                str_get_friend_image:
+                                                    str_image.toString(),
                                               ),
                                             ),
                                           );

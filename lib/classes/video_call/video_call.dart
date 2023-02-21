@@ -38,7 +38,9 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   void initState() {
     super.initState();
     // Set up an instance of Agora engine
-    setupVideoSDKEngine();
+    if (mounted) {
+      setupVideoSDKEngine();
+    }
   }
 
 // Clean up the resources when you leave
@@ -46,6 +48,9 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   void dispose() async {
     // if (mounted)
     await agoraEngine.leaveChannel();
+    //
+    agoraEngine.release();
+    //
     super.dispose();
   }
 
@@ -67,7 +72,11 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
             if (kDebugMode) {
               print('');
             }
+            //
+            agoraEngine.release();
+            //
             Navigator.pop(context);
+            //
           },
           icon: const Icon(
             Icons.chevron_left,
@@ -113,14 +122,18 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: _isJoined ? null : () => {join()},
-                  child: const Text("Join"),
+                  child: const Text(
+                    "Call",
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: ElevatedButton(
                   onPressed: _isJoined ? () => {leave()} : null,
-                  child: const Text("Leave"),
+                  child: const Text(
+                    "End call",
+                  ),
                 ),
               ),
             ],
@@ -142,7 +155,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
       );
     } else {
       return const Text(
-        'Click join to Join',
+        'Click call to connect',
         textAlign: TextAlign.center,
       );
     }
@@ -227,6 +240,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
       _isJoined = false;
       _remoteUid = null;
     });
-    agoraEngine.leaveChannel().then((value) => Navigator.pop(context));
+    agoraEngine.leaveChannel();
+    // agoraEngine.release();
   }
 }

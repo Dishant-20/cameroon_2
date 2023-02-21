@@ -52,6 +52,18 @@ Text text_with_bold_style(str) {
   );
 }
 
+// text with bold
+Text text_with_bold_style_black(str) {
+  return Text(
+    str.toString(),
+    style: GoogleFonts.montserrat(
+      fontSize: 18.0,
+      fontWeight: FontWeight.w700,
+      color: Colors.black,
+    ),
+  );
+}
+
 /* ================================================================ */
 
 // text

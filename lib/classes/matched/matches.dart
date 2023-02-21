@@ -520,6 +520,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
           str_get_friend_id: arr_swipe[i]['userId'].toString(),
           str_get_login_user_id: prefs.getInt('userId').toString(),
           str_get_friend_name: arr_swipe[i]['fullName'].toString(),
+          str_get_friend_image: arr_swipe[i]['image'].toString(),
         ),
       ),
     );
