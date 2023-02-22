@@ -136,6 +136,7 @@ class _SplashScreenState extends State<SplashScreen> {
             str_start_pick_end_call: 'get_a_call',
             str_friend_image: remoteMessage.data['caller_image'].toString(),
             str_friend_name: remoteMessage.data['caller_name'].toString(),
+            str_device_token: '',
           ),
         ),
       );
@@ -183,11 +184,5 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ),
     );
-    /*Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const PageControlScreen(),
-      ),
-    );*/
   }
 }

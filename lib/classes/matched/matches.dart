@@ -490,6 +490,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
         builder: (context) => ProfileDetailsScreen(
           str_user_profile_id: arr_swipe[i]['userId'].toString(),
           str_profile_notification: 'no',
+          str_friend_device_token: '',
         ),
       ),
     );
@@ -521,6 +522,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
           str_get_login_user_id: prefs.getInt('userId').toString(),
           str_get_friend_name: arr_swipe[i]['fullName'].toString(),
           str_get_friend_image: arr_swipe[i]['image'].toString(),
+          str_get_friend_device_token: '',
         ),
       ),
     );

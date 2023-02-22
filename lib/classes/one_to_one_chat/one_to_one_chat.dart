@@ -27,12 +27,14 @@ class OneToOneChatScreen extends StatefulWidget {
       required this.str_get_login_user_id,
       required this.str_get_friend_id,
       required this.str_get_friend_name,
-      required this.str_get_friend_image});
+      required this.str_get_friend_image,
+      required this.str_get_friend_device_token});
 
   final String str_get_login_user_id;
   final String str_get_friend_id;
   final String str_get_friend_name;
   final String str_get_friend_image;
+  final String str_get_friend_device_token;
 
   @override
   State<OneToOneChatScreen> createState() => _OneToOneChatScreenState();
@@ -162,6 +164,8 @@ class _OneToOneChatScreenState extends State<OneToOneChatScreen> {
                       str_start_pick_end_call: 'make_a_call',
                       str_friend_image: widget.str_get_friend_image.toString(),
                       str_friend_name: widget.str_get_friend_name.toString(),
+                      str_device_token:
+                          widget.str_get_friend_device_token.toString(),
                     ),
                   ),
                 );

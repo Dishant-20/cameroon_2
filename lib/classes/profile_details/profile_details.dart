@@ -21,8 +21,10 @@ class ProfileDetailsScreen extends StatefulWidget {
   const ProfileDetailsScreen(
       {super.key,
       required this.str_user_profile_id,
-      required this.str_profile_notification});
+      required this.str_profile_notification,
+      required this.str_friend_device_token});
 
+  final String str_friend_device_token;
   final String str_profile_notification;
   final String str_user_profile_id;
 
@@ -480,6 +482,10 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                                     str_name.toString(),
                                                 str_get_friend_image:
                                                     str_image.toString(),
+                                                str_get_friend_device_token:
+                                                    widget
+                                                        .str_friend_device_token
+                                                        .toString(),
                                               ),
                                             ),
                                           );

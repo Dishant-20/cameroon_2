@@ -77,16 +77,16 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                     onTap: () {
                       print('object');
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfileDetailsScreen(
-                            str_user_profile_id:
-                                draggableItems[index].id.toString(),
-                            str_profile_notification: 'no',
-                          ),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => ProfileDetailsScreen(
+                      //       str_user_profile_id:
+                      //           draggableItems[index].id.toString(),
+                      //       str_profile_notification: 'no',
+                      //     ),
+                      //   ),
+                      // );
                     },
                     child: PositionedTransition(
                       rect: RelativeRectTween(

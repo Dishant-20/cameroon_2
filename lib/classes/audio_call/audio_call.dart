@@ -18,11 +18,13 @@ class AudioCallScreen extends StatefulWidget {
       {super.key,
       required this.str_start_pick_end_call,
       required this.str_friend_image,
-      required this.str_friend_name});
+      required this.str_friend_name,
+      required this.str_device_token});
 
   final String str_friend_name;
   final String str_start_pick_end_call;
   final String str_friend_image;
+  final String str_device_token;
 
   @override
   State<AudioCallScreen> createState() => _AudioCallScreenState();
@@ -243,7 +245,8 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                         join();
                         //
                         callOnFcmApiSendPushNotifications(
-                            'fRjCVkf610TckurGgMEwfD:APA91bEViG26xoaQ39IfnauAjjAK-fzb8JGDwRjUXvgj7DcHVWttFSgV8FsLcpI-ETzgwDcrvDJVdnpHPq4oNvMF2JAklqkcsKUKI-YdmsHaMuJ38gY59v41fbUlr5POFBt1OijMIV0r');
+                          widget.str_device_token.toString(),
+                        );
                         //
                       },
                       child: Container(
@@ -305,62 +308,161 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                     ),
             ),
           ] else ...[
-            Row(
+            Center(
+              child: (str_call_tags == 'start_call')
+                  ? InkWell(
+                      onTap: () {
+                        setState(() {
+                          str_call_tags = 'end_call';
+                          str_show_calling_text = 'remote_user_disconnected';
+                        });
+                        //
+
+                        join();
+                        //
+                        // callOnFcmApiSendPushNotifications(
+                        //   widget.str_device_token.toString(),
+                        // );
+                        //
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(10.0),
+
+                        // width: MediaQuery.of(context).size.width,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(
+                            14,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Accept',
+                            style: TextStyle(
+                              fontFamily: font_family_name,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () {
+                        setState(() {
+                          str_call_tags = 'start_call';
+                          str_show_calling_text = 'none';
+                        });
+                        // countdownTimer!.cancel();
+                        leave();
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(10.0),
+
+                        // width: MediaQuery.of(context).size.width,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(
+                            14,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'End Call',
+                            style: TextStyle(
+                              fontFamily: font_family_name,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+            ),
+            /*Row(
               children: [
                 Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(10.0),
+                  child: InkWell(
+                    onTap: () {
+                      // str_start_pick_end_call
+                      setState(() {
+                        str_call_tags = 'end_call';
+                        str_show_calling_text = 'remote_user_disconnected';
+                      });
+                      //
 
-                    // width: 48.0,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(
-                        14.0,
+                      join();
+                      // leave();
+                      //
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.all(10.0),
+
+                      // width: 48.0,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(
+                          14.0,
+                        ),
                       ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Accept',
-                        style: TextStyle(
-                          fontFamily: font_family_name,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      child: Center(
+                        child: Text(
+                          'Accept',
+                          style: TextStyle(
+                            fontFamily: font_family_name,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
                 //
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(10.0),
+                /*Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        str_call_tags = 'start_call';
+                        str_show_calling_text = 'none';
+                      });
+                      // countdownTimer!.cancel();
+                      leave();
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.all(10.0),
 
-                    // width: 48.0,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(
-                        14.0,
+                      // width: 48.0,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(
+                          14.0,
+                        ),
                       ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Decline',
-                        style: TextStyle(
-                          fontFamily: font_family_name,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      child: Center(
+                        child: Text(
+                          'Decline',
+                          style: TextStyle(
+                            fontFamily: font_family_name,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                ),*/
                 //
               ],
-            )
+            )*/
           ],
           /*Row(
             children: <Widget>[

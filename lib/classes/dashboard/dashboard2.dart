@@ -610,6 +610,7 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
                                                             .toString(),
                                                     str_profile_notification:
                                                         'no',
+                                                    str_friend_device_token: '',
                                                   ),
                                                 ),
                                               );

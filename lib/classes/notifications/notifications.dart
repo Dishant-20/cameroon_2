@@ -287,6 +287,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                         ['userId']
                                     .toString(),
                                 str_profile_notification: 'yes',
+                                str_friend_device_token:
+                                    arr_notification_list[i]['deviceToken']
+                                        .toString(),
                               ),
                             ),
                           );

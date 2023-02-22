@@ -296,6 +296,7 @@ class _NearbyFriendsScreenState extends State<NearbyFriendsScreen> {
                       builder: (context) => ProfileDetailsScreen(
                         str_user_profile_id: arr_swipe[i]['id'].toString(),
                         str_profile_notification: 'no',
+                        str_friend_device_token: '',
                       ),
                     ),
                   );
