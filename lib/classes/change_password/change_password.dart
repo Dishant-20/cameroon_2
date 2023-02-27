@@ -3,6 +3,7 @@
 import 'package:cameroon_2/classes/change_password/change_password_modal.dart';
 import 'package:cameroon_2/classes/custom/drawer/drawer.dart';
 import 'package:cameroon_2/classes/header/utils/Utils.dart';
+import 'package:flutter/foundation.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,7 +38,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         // automaticallyImplyLeading: false,
         title: Text(
           //
-          text_change_language,
+          text_change_password,
           //
           style: TextStyle(
             fontFamily: font_family_name,
@@ -134,7 +135,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     child: Center(
                       child: Text(
                         //
-                        text_change_language,
+                        text_change_password,
                         //
                         style: GoogleFonts.montserrat(
                           fontSize: 16.0,
@@ -226,8 +227,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       )
                           .then(
                         (value) {
-                          print('object');
-                          print(value.success_status);
+                          // print('object');
+                          if (kDebugMode) {
+                            print(value.success_status);
+                          }
                           if (value.success_status == 'Fails'.toLowerCase()) {
                             setState(() {
                               loader_indicator = '0';

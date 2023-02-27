@@ -2,16 +2,21 @@
 
 import 'package:get/get.dart';
 
-import 'dart:ui';
+// import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'dart:ui';
+// import 'dart:ui';
+
+// var application_base_url =
+// 'https://demo4.evirtualservices.net/cameroon/services/index';
 
 var application_base_url =
-    'https://demo4.evirtualservices.net/cameroon/services/index';
+    'https://camerron.evirtualservices.co/services/index';
+
+//
 
 var font_family_name = 'Avenir Next';
 // GoogleFonts.montserrat(fontSize: 16);

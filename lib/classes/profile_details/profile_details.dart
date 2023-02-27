@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:ui';
 import 'dart:convert';
 import 'package:cameroon_2/classes/custom/appbar/custom_pop_up/custom_loader.dart';
 import 'package:cameroon_2/classes/one_to_one_chat/one_to_one_chat.dart';
@@ -66,6 +67,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     super.initState();
     //
     profile_details_WB();
+    print(window.locale.languageCode);
     //
     // startTimer();
     //
@@ -209,8 +211,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
 
         //
         setState(() {
-          print('i am last');
-          print(str_both_profile_matched);
+          // print('i am last');
+          // print(str_both_profile_matched);
           str_user_profile_loader = '1';
         });
 
@@ -218,13 +220,17 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
         // Navigator.pop(context);
         //
       } else {
-        print(
-          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
-        );
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
       }
     } else {
       // return postList;
-      print('something went wrong');
+      if (kDebugMode) {
+        print('something went wrong');
+      }
     }
   }
 

@@ -169,7 +169,7 @@ class _HelpScreenState extends State<HelpScreen> {
                       child: Column(
                         children: [
                           Text(
-                            '$text_need_help :\n',
+                            '$text_need_help \n',
                             style: TextStyle(
                               fontFamily: font_family_name,
                               fontWeight: FontWeight.bold,

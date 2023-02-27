@@ -6,6 +6,7 @@ import 'package:cameroon_2/classes/nearby_friends/nearby_friends.dart';
 import 'package:cameroon_2/classes/new_user_profile/new_user_profile.dart';
 import 'package:cameroon_2/classes/profile_details/profile_details.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -219,7 +220,9 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
     if (resposne.statusCode == 200) {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         //
-        print(prefs.getString('deviceToken'));
+        if (kDebugMode) {
+          print(prefs.getString('deviceToken'));
+        }
         //
         if (arr_swipe.isEmpty) {
           setState(() {
@@ -247,7 +250,12 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
+          //
           text_matches,
+          // locale: Locale.code,
+          // print(window.locale.languageCode);
+          // locale: Locale('fr'),
+          //
           style: TextStyle(
             fontFamily: font_family_name,
           ),

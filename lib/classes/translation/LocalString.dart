@@ -76,7 +76,8 @@ class LocalString extends Translations {
           'protestants': 'Protestant',
           'mormons': 'Mormons',
           'nearby_friend': 'Nearby Friends',
-          'notification': 'Notifications'
+          'notification': 'Notifications',
+          'rights_reserved': 'All Rights Reserved',
         },
         'fr_FR': {
           'Get Started Now': 'Commencez maintenant',

@@ -134,8 +134,8 @@ class _SplashScreenState extends State<SplashScreen> {
         MaterialPageRoute(
           builder: (context) => AudioCallScreen(
             str_start_pick_end_call: 'get_a_call',
-            str_friend_image: remoteMessage.data['caller_image'].toString(),
-            str_friend_name: remoteMessage.data['caller_name'].toString(),
+            str_friend_image: remoteMessage.data['image'].toString(),
+            str_friend_name: remoteMessage.data['name'].toString(),
             str_device_token: '',
           ),
         ),

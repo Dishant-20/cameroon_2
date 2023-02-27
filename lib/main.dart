@@ -94,7 +94,9 @@ void main() async {
 
 void showDialog(BuildContext context, Map<String, dynamic> message) {
   // data
-  print('show');
+  if (kDebugMode) {
+    print('show');
+  }
 }
 
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {

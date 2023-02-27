@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, prefer_typing_uninitialized_variables
 
 import 'dart:convert';
 
@@ -28,8 +28,10 @@ class OneToOneChatScreen extends StatefulWidget {
       required this.str_get_friend_id,
       required this.str_get_friend_name,
       required this.str_get_friend_image,
-      required this.str_get_friend_device_token});
+      required this.str_get_friend_device_token,
+      this.get_full_data});
 
+  final get_full_data;
   final String str_get_login_user_id;
   final String str_get_friend_id;
   final String str_get_friend_name;
@@ -62,6 +64,10 @@ class _OneToOneChatScreenState extends State<OneToOneChatScreen> {
   void initState() {
     super.initState();
     //
+    if (kDebugMode) {
+      print('<====== dishant rajput =======>');
+      print(widget.get_full_data);
+    }
     func_create_room_id();
     //
   }
@@ -161,6 +167,7 @@ class _OneToOneChatScreenState extends State<OneToOneChatScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => AudioCallScreen(
+                      get_receiver_data: widget.get_full_data,
                       str_start_pick_end_call: 'make_a_call',
                       str_friend_image: widget.str_get_friend_image.toString(),
                       str_friend_name: widget.str_get_friend_name.toString(),

@@ -518,6 +518,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => OneToOneChatScreen(
+          get_full_data: arr_swipe[i],
           str_get_friend_id: arr_swipe[i]['userId'].toString(),
           str_get_login_user_id: prefs.getInt('userId').toString(),
           str_get_friend_name: arr_swipe[i]['fullName'].toString(),

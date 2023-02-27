@@ -19,8 +19,10 @@ class AudioCallScreen extends StatefulWidget {
       required this.str_start_pick_end_call,
       required this.str_friend_image,
       required this.str_friend_name,
-      required this.str_device_token});
+      required this.str_device_token,
+      this.get_receiver_data});
 
+  final get_receiver_data;
   final String str_friend_name;
   final String str_start_pick_end_call;
   final String str_friend_image;
@@ -47,6 +49,9 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
     if (mounted) {
       setupVoiceSDKEngine();
     }
+
+    print('rajputana');
+    print(widget.get_receiver_data);
 
     //
     // join();
@@ -244,9 +249,10 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
 
                         join();
                         //
-                        callOnFcmApiSendPushNotifications(
-                          widget.str_device_token.toString(),
-                        );
+                        // callOnFcmApiSendPushNotifications(
+                        //   widget.str_device_token.toString(),
+                        // );
+                        send_notification();
                         //
                       },
                       child: Container(
@@ -677,7 +683,10 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
         "caller_name": prefs.getString('fullName').toString(),
         "caller_image": prefs.getString('image').toString(),
       },
-      "to": userToken.toString()
+      // "to": userToken.toString()
+      "to":
+          'eTGr6bDMSOaR7zQzT0577L:APA91bFzUkHG-7nH23eQDW9AgHwR-vpbH9xEmfPWnuIXdbiFQgH7yNaOU8zEESC6rWoMyOirfmxKS9yliV_ihuI-Iml9WNg9m9dd_j9c5vXTmFGHG5JuzJGGEyM7FMdeV1XcQGNBtU0x'
+              .toString()
     };
 
     final headers = {
@@ -701,4 +710,70 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
       return false;
     }
   }
+
+  //
+  /*
+  [action] => notitest
+    [Receiver_device] => Android
+    [Receiver_deviceToken] => dUVIPryZQP-GlSD3OxQYjJ:APA91bH87MCeB46JN9VJ87J1w8UeTH5nNomfvYYqJ8dtuz-898MHVVDTfSHMMAZNyx6ht7dneAdeftEzMfV2apiu_6-vxkCbiTRXCd3q3IAWXsut4bZNFm5z_bV8YquO4ASI0uUYTqeK
+    [message] => Audio calling...
+    [channel] => 16+17
+    [name] => s2
+    [image] => https://demo4.evirtualservices.net/cameroon/img/uploads/users/1677232718BUPSC_1677232668485.png
+    [deviceToken] => eTGr6bDMSOaR7zQzT0577L:APA91bFzUkHG-7nH23eQDW9AgHwR-vpbH9xEmfPWnuIXdbiFQgH7yNaOU8zEESC6rWoMyOirfmxKS9yliV_ihuI-Iml9WNg9m9dd_j9c5vXTmFGHG5JuzJGGEyM7FMdeV1XcQGNBtU0x
+    [device] => Android
+    [type] => audioCall */
+  send_notification() async {
+    if (kDebugMode) {
+      print('=====> POST : MY PROFILE LIST');
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'notitest',
+          'Receiver_device': widget.get_receiver_data['device'].toString(),
+          'Receiver_deviceToken':
+              widget.get_receiver_data['deviceToken'].toString(),
+          'message': 'Audio calling...',
+          'channel': channelName,
+          'name': prefs.getString('fullName').toString(),
+          'image': prefs.getString('image').toString(),
+          'deviceToken': 'my_token',
+          'device': 'iOS',
+          'type': 'audioCall',
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+
+        //
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
+  }
+  //
 }

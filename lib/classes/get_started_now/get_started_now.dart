@@ -6,6 +6,7 @@ import 'package:cameroon_2/classes/dashboard/dashboard2.dart';
 import 'package:cameroon_2/classes/header/utils/Utils.dart';
 import 'package:cameroon_2/classes/login/login.dart';
 import 'package:cameroon_2/classes/registration/registration.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -50,6 +51,9 @@ class _GetStartedNowScreenState extends State<GetStartedNowScreen> {
         //   ),
         // );
       } else {
+        if (kDebugMode) {
+          print('ok ok ok ok ');
+        }
         Navigator.push(
           context,
           MaterialPageRoute(

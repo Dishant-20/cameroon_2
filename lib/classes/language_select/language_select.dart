@@ -173,10 +173,13 @@ class _LanguageSelectScreenState extends State<LanguageSelectScreen> {
                             IconButton(
                               onPressed: () {
                                 if (kDebugMode) {
-                                  print('france');
+                                  print('user select french');
                                 }
                                 //
-                                str_select_language = '2';
+                                setState(() {
+                                  str_select_language = '2';
+                                });
+
                                 func_prefered_language();
                                 //
                               },
@@ -245,7 +248,7 @@ class _LanguageSelectScreenState extends State<LanguageSelectScreen> {
                             IconButton(
                               onPressed: () {
                                 if (kDebugMode) {
-                                  print('english');
+                                  print('user select english');
                                 }
                                 //
                                 str_select_language = '1';
@@ -347,17 +350,22 @@ class _LanguageSelectScreenState extends State<LanguageSelectScreen> {
   //
   func_prefered_language() {
     if (str_select_language == '1') {
-      var locale = const Locale('en');
+      var locale = const Locale('en_US');
       Get.updateLocale(locale);
     } else if (str_select_language == '2') {
-      var locale = const Locale('fr');
+      var locale = const Locale('fr_FR');
       Get.updateLocale(locale);
     }
     setState(() {
-      // if (kDebugMode) {
-      //   print('yes user update language');
-      // }
+      if (kDebugMode) {
+        print('refresh');
+      }
     });
+    // setState(() {
+    //   // if (kDebugMode) {
+    //   //   print('yes user update language');
+    //   // }
+    // });
   }
 
   //
