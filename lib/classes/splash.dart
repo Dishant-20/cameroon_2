@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:cameroon_2/classes/audio_call/audio_call.dart';
 import 'package:cameroon_2/classes/language_select/language_select.dart';
 import 'package:cameroon_2/classes/page_control/page_control.dart';
+import 'package:cameroon_2/classes/video_call/video_call.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -129,17 +130,32 @@ class _SplashScreenState extends State<SplashScreen> {
         print('=====> CLICK NOTIFICATIONs <=====');
         print(remoteMessage.data);
       }
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AudioCallScreen(
-            str_start_pick_end_call: 'get_a_call',
-            str_friend_image: remoteMessage.data['image'].toString(),
-            str_friend_name: remoteMessage.data['name'].toString(),
-            str_device_token: '',
+
+      if (remoteMessage.data['type'].toString() == 'audioCall') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AudioCallScreen(
+              str_start_pick_end_call: 'get_a_call',
+              str_friend_image: remoteMessage.data['image'].toString(),
+              str_friend_name: remoteMessage.data['name'].toString(),
+              str_device_token: '',
+              str_channel_name: remoteMessage.data['channel'].toString(),
+            ),
           ),
-        ),
-      );
+        );
+      } else if (remoteMessage.data['type'].toString() == 'videoCall') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VideoCallScreen(
+              str_from_notification: 'yes',
+              str_channel_name: remoteMessage.data['channel'].toString(),
+              str_friend_device_token: '',
+            ),
+          ),
+        );
+      }
     });
   }
 

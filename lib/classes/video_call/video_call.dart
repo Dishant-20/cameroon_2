@@ -1,21 +1,34 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cameroon_2/classes/header/utils/Utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const String appId = "bbe938fe04a746fd9019971106fa51ff";
 
 class VideoCallScreen extends StatefulWidget {
-  const VideoCallScreen({super.key});
+  const VideoCallScreen(
+      {super.key,
+      required this.str_from_notification,
+      required this.str_channel_name,
+      required this.str_friend_device_token});
 
+  final String str_from_notification;
+  final String str_channel_name;
+  final String str_friend_device_token;
   @override
   State<VideoCallScreen> createState() => _VideoCallScreenState();
 }
 
 class _VideoCallScreenState extends State<VideoCallScreen> {
   //
-  String channelName = "channel_video_call";
+  // var str_which_profile = '';
+  // String channelName = "dishu_1234";
   String token = "";
 
   int uid = 0; // uid of the local user
@@ -122,9 +135,13 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: _isJoined ? null : () => {join()},
-                  child: const Text(
-                    "Call",
-                  ),
+                  child: (widget.str_from_notification == 'yes')
+                      ? const Text(
+                          "Accept",
+                        )
+                      : const Text(
+                          "Call",
+                        ),
                 ),
               ),
               const SizedBox(width: 10),
@@ -168,7 +185,8 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
         controller: VideoViewController.remote(
           rtcEngine: agoraEngine,
           canvas: VideoCanvas(uid: _remoteUid),
-          connection: RtcConnection(channelId: channelName),
+          connection:
+              RtcConnection(channelId: widget.str_channel_name.toString()),
         ),
       );
     } else {
@@ -229,7 +247,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
 
     await agoraEngine.joinChannel(
       token: token,
-      channelId: channelName,
+      channelId: widget.str_channel_name.toString(),
       options: options,
       uid: uid,
     );
@@ -242,5 +260,61 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     });
     agoraEngine.leaveChannel();
     // agoraEngine.release();
+  }
+
+  //
+  send_notification() async {
+    if (kDebugMode) {
+      print('=====> POST : MY PROFILE LIST');
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'notitest',
+          'Receiver_device':
+              'iOS', //widget.get_receiver_data['device'].toString(),
+          'Receiver_deviceToken':
+              // widget.get_receiver_data['deviceToken'].toString(),
+              'ffKEmMiYQcejA8XFNKAePh:APA91bEtVZU-4tHltFsmA3dz8zUP8Sv1BB14UH0cZVaNAWLiHyEULkTw7I1JbfS-DEMfrRpN5sZVd62ANRXdOaUI3QfYrqRKNVkAZoA6oZosHYhLMSh5Hi_1YXcx1W7DED-f_FdsZcoy',
+          'message': 'Video calling...',
+          'channel': widget.str_channel_name.toString(),
+          'name': prefs.getString('fullName').toString(),
+          'image': prefs.getString('image').toString(),
+          'deviceToken': 'my_token',
+          'device': 'iOS',
+          'type': 'audioCall',
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+
+        //
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
   }
 }

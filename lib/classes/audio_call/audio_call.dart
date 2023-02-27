@@ -20,13 +20,15 @@ class AudioCallScreen extends StatefulWidget {
       required this.str_friend_image,
       required this.str_friend_name,
       required this.str_device_token,
-      this.get_receiver_data});
+      this.get_receiver_data,
+      required this.str_channel_name});
 
   final get_receiver_data;
   final String str_friend_name;
   final String str_start_pick_end_call;
   final String str_friend_image;
   final String str_device_token;
+  final String str_channel_name;
 
   @override
   State<AudioCallScreen> createState() => _AudioCallScreenState();
@@ -39,6 +41,12 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
   Timer? countdownTimer;
   var str_show_calling_text = 'none';
   //
+  //for mute
+  int volume = 50;
+  bool _isMuted = false;
+  //
+  var str_volume = '0';
+  //
   @override
   void initState() {
     super.initState();
@@ -50,14 +58,30 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
       setupVoiceSDKEngine();
     }
 
-    print('rajputana');
-    print(widget.get_receiver_data);
+    if (kDebugMode) {
+      print('rajputana');
+      print(widget.get_receiver_data);
+    }
+
+    // onMuteChecked(bool value) {
+    //   setState(() {
+    //     _isMuted = value;
+    //     agoraEngine.muteAllRemoteAudioStreams(_isMuted);
+    //   });
+    // }
+
+    // onVolumeChanged(double newValue) {
+    //   setState(() {
+    //     volume = newValue.toInt();
+    //     agoraEngine.adjustRecordingSignalVolume(volume);
+    //   });
+    // }
 
     //
     // join();
   }
 
-  String channelName = "dishu_1234";
+  // String channelName = "dishu_1234";
   String token = "";
 
   int uid = 0; // uid of the local user
@@ -234,6 +258,64 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                 ),
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Checkbox(
+              //   value: _isMuted,
+              //   onChanged: (_isMuted) => {
+              //     onMuteChecked(
+              //       _isMuted!,
+              //     ),
+              //   },
+              // ),
+              // const Text("Mute"),
+              // Expanded(
+              //   child: Slider(
+              //     min: 0,
+              //     max: 100,
+              //     value: volume.toDouble(),
+              //     onChanged: (value) => {
+              //       onVolumeChanged(
+              //         value,
+              //       ),
+              //     },
+              //   ),
+              // ),
+              //
+              (str_volume == '0')
+                  ? Align(
+                      alignment: Alignment.center,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            str_volume = '1';
+                            agoraEngine.adjustRecordingSignalVolume(100);
+                          });
+                        },
+                        icon: Icon(
+                          Icons.volume_down_sharp,
+                          // Icons.volume_off_rounded,
+                        ),
+                      ),
+                    )
+                  : Align(
+                      alignment: Alignment.center,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            str_volume = '0';
+                            agoraEngine.adjustRecordingSignalVolume(0);
+                          });
+                        },
+                        icon: Icon(
+                          Icons.volume_off_rounded,
+                        ),
+                      ),
+                    ),
+              //
+            ],
           ),
           //
           if (widget.str_start_pick_end_call == 'make_a_call') ...[
@@ -555,12 +637,13 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
     agoraEngine = createAgoraRtcEngine();
     await agoraEngine.initialize(const RtcEngineContext(appId: appId));
 
-//
+    //
     // agoraEngine.setEnableSpeakerphone(false);
     // agoraEngine.muteLocalAudioStream(true);
     // agoraEngine.isSpeakerphoneEnabled();
-//
+    //
     // Register the event handler
+    //
     agoraEngine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
@@ -612,7 +695,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
 
     await agoraEngine.joinChannel(
       token: token,
-      channelId: channelName,
+      channelId: widget.str_channel_name.toString(),
       options: options,
       uid: uid,
     );
@@ -743,8 +826,9 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
           'Receiver_device': widget.get_receiver_data['device'].toString(),
           'Receiver_deviceToken':
               widget.get_receiver_data['deviceToken'].toString(),
+          // 'ffKEmMiYQcejA8XFNKAePh:APA91bEtVZU-4tHltFsmA3dz8zUP8Sv1BB14UH0cZVaNAWLiHyEULkTw7I1JbfS-DEMfrRpN5sZVd62ANRXdOaUI3QfYrqRKNVkAZoA6oZosHYhLMSh5Hi_1YXcx1W7DED-f_FdsZcoy',
           'message': 'Audio calling...',
-          'channel': channelName,
+          'channel': widget.str_channel_name.toString(),
           'name': prefs.getString('fullName').toString(),
           'image': prefs.getString('image').toString(),
           'deviceToken': 'my_token',
@@ -772,8 +856,24 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
       }
     } else {
       // return postList;
-      print('something went wrong');
+      if (kDebugMode) {
+        print('something went wrong');
+      }
     }
   }
+
   //
+  onMuteChecked(bool value) {
+    setState(() {
+      _isMuted = value;
+      agoraEngine.muteAllRemoteAudioStreams(_isMuted);
+    });
+  }
+
+  onVolumeChanged(double newValue) {
+    setState(() {
+      volume = newValue.toInt();
+      agoraEngine.adjustRecordingSignalVolume(volume);
+    });
+  }
 }

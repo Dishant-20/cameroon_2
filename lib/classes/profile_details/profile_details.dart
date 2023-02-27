@@ -58,6 +58,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   var str_education = '';
   var str_age = '';
   var str_interested_in = '';
+
+  var str_device_token = '';
   //
   // late Timer myTimer;
   // Duration myDuration = Duration();
@@ -148,6 +150,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
         str_age = get_data['data']['dob'].toString();
         str_address = get_data['data']['address'].toString();
         str_both_profile_matched = get_data['data']['bothLiked'].toString();
+
+        str_device_token = get_data['data']['deviceToken'].toString();
 
         if (prefs.getString('interent_in').toString() == '1') {
           str_interested_in = 'Male';
@@ -540,11 +544,20 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                           if (kDebugMode) {
                                             print('');
                                           }
+                                          // 'ownId': str_login_user_id.toString(),
+                                          // 'userId': widget.str_user_profile_id.toString(),
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  const VideoCallScreen(),
+                                                  VideoCallScreen(
+                                                str_from_notification: 'no',
+                                                str_channel_name:
+                                                    '$str_login_user_id+${widget.str_user_profile_id}',
+                                                str_friend_device_token:
+                                                    str_device_token.toString(),
+                                                // str_friend_device_token
+                                              ),
                                             ),
                                           );
                                         },

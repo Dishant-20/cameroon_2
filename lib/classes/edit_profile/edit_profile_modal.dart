@@ -46,6 +46,7 @@ class EditProfileModal {
           'email': email,
           'address': address,
           'contactNumber': contact_number,
+          'device': 'iOS',
         },
       ),
     );

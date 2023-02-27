@@ -173,6 +173,7 @@ class _OneToOneChatScreenState extends State<OneToOneChatScreen> {
                       str_friend_name: widget.str_get_friend_name.toString(),
                       str_device_token:
                           widget.str_get_friend_device_token.toString(),
+                      str_channel_name: room_id.toString(),
                     ),
                   ),
                 );
@@ -204,19 +205,24 @@ class _OneToOneChatScreenState extends State<OneToOneChatScreen> {
                 )
                 .orderBy('time_stamp', descending: true)
                 // .limit(20)
-                .where(
-              'room_id',
-              whereIn: [
-                room_id,
-                reverse_room_id,
-              ],
-            ).snapshots(),
+                .where('users', whereIn: ["13+17", "17+13"]
+                    /*whereIn: [
+                // room_id,
+                // reverse_room_id,
+                "13+17", "17+13"
+              ],*/
+                    ).snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 //
                 func_scroll_to_bottom();
                 //
-                var save_snapshot_value = snapshot.data!.docs.reversed.toList();
+                // var save_snapshot_value = snapshot.data!.docs.reversed.toList();
+                var save_snapshot_value = snapshot.data!.docs.toList();
+                if (kDebugMode) {
+                  print(save_snapshot_value);
+                }
+                //
                 return Container(
                   margin: const EdgeInsets.only(bottom: 80),
                   color: Colors.transparent,
