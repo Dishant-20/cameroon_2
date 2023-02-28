@@ -1,5 +1,9 @@
 // ignore_for_file: camel_case_types, non_constant_identifier_names, use_build_context_synchronously
 
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
 import 'package:cameroon_2/classes/change_password/change_password.dart';
 import 'package:cameroon_2/classes/dashboard/dashboard.dart';
 import 'package:cameroon_2/classes/dashboard/dashboard2.dart';
@@ -14,6 +18,7 @@ import 'package:cameroon_2/classes/matched/matches.dart';
 import 'package:cameroon_2/classes/notifications/notifications.dart';
 import 'package:cameroon_2/classes/subscription/subscription.dart';
 import 'package:cameroon_2/classes/translation/LocalString.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 /*import 'package:triple_r_custom/Utils.dart';
 import 'package:triple_r_custom/classes/book_service/book_service.dart';
@@ -556,17 +561,11 @@ class _navigationDrawerState extends State<navigationDrawer> {
                 ),
               ),
               onPressed: () async {
-                SharedPreferences preferences =
-                    await SharedPreferences.getInstance();
-                preferences.clear().then((value) => {
-                      // print(preferences.getString('fullName')),
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const GetStartedNowScreen(),
-                        ),
-                      ),
-                    });
+                //
+                Navigator.pop(context);
+                //
+                logout_WB();
+                //
               },
             ),
             TextButton(
@@ -580,4 +579,61 @@ class _navigationDrawerState extends State<navigationDrawer> {
       },
     );
   }
+
+  //
+  logout_WB() async {
+    if (kDebugMode) {
+      print('=====> POST : logout');
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'logout',
+          'userId': prefs.getInt('userId').toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.clear().then((value) => {
+              // print(preferences.getString('fullName')),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const GetStartedNowScreen(),
+                ),
+              ),
+            });
+        //
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      if (kDebugMode) {
+        print('something went wrong');
+      }
+    }
+  }
+  //
 }

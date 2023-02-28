@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:cameroon_2/classes/nearby_friends/nearby_friends.dart';
 import 'package:cameroon_2/classes/new_user_profile/new_user_profile.dart';
 import 'package:cameroon_2/classes/profile_details/profile_details.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -149,14 +150,68 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
 
         if (get_data['data']['deviceToken'].toString() == '') {
           //
-          edit_profile_WB();
+          ///
+          ///
+          ///
+          ///
+          ///
+          FirebaseMessaging.instance.getToken().then(
+                (value) => {
+                  // print("FCM Token Is: ============> newly"),
+                  // print(
+                  // value,
+                  // ),
+                  //
+                  edit_profile_WB(
+                    value,
+                    prefs.getInt('userId').toString(),
+                  ),
+                  //
+                },
+              );
+
+          ///
+          ///
+          ///
+          ///
+          ///
+          ///
+          ///
           //
         } else if (get_data['data']['deviceToken'].toString() == 'null') {
           //
           if (kDebugMode) {
-            print('null');
+            print('device token is null');
           }
-          edit_profile_WB();
+
+          ///
+          ///
+          ///
+          ///
+          ///
+          FirebaseMessaging.instance.getToken().then(
+                (value) => {
+                  // print("FCM Token Is: ============> newly"),
+                  // print(
+                  // value,
+                  // ),
+                  //
+                  edit_profile_WB(
+                    value,
+                    prefs.getInt('userId').toString(),
+                  ),
+                  //
+                },
+              );
+
+          ///
+          ///
+          ///
+          ///
+          ///
+          ///
+          ///
+
           //
         } else {
           if (arr_swipe.isEmpty) {
@@ -184,17 +239,27 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
 
   //
   //
-  edit_profile_WB() async {
-    print('=====> POST : EDIT PROFILE');
+  edit_profile_WB(device_token, user_id) async {
+    //
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    var str_d_t = '';
-    if (prefs.getString('deviceToken').toString() == 'null') {
-      print('i am null');
-    } else {
-      print('i am null 2');
+    if (kDebugMode) {
+      print('=====> POST : EDIT PROFILE');
+      // print(prefs.getString('deviceToken'));
     }
+
+    // var str_device_token = prefs.getString('deviceToken').toString();
+    // print(str_device_token);
+
+    // var str_d_t = '';
+    // if (prefs.getString('deviceToken').toString() == 'null') {
+    //   if (kDebugMode) {
+    //     print('i am null');
+    //   }
+    // } else {
+    //   if (kDebugMode) {
+    //     print('i am null 2');
+    //   }
+    // }
     final resposne = await http.post(
       Uri.parse(
         application_base_url,
@@ -205,8 +270,8 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
       body: jsonEncode(
         <String, String>{
           'action': 'editprofile',
-          'userId': prefs.getInt('userId').toString(),
-          'deviceToken': prefs.getString('deviceToken').toString(),
+          'userId': user_id,
+          'deviceToken': device_token,
         },
       ),
     );
@@ -221,7 +286,7 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         //
         if (kDebugMode) {
-          print(prefs.getString('deviceToken'));
+          // print(prefs.getString('deviceToken'));
         }
         //
         if (arr_swipe.isEmpty) {

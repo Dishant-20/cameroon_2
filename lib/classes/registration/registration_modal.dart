@@ -65,6 +65,7 @@ class RegistrationModel {
           'role': 'Member',
           'latitude': '20',
           'longitude': '30',
+          'device': 'iOS',
           'deviceToken': prefs.getString('deviceToken').toString(),
         },
       ),

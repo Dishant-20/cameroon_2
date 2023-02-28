@@ -47,6 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //       },
     //     );
 
+    func_get_device_token();
     func_get_full_data_of_notification();
     func_click_on_notification();
     //
@@ -96,6 +97,25 @@ class _SplashScreenState extends State<SplashScreen> {
         func_push_to_next_screen();
       }
     });
+  }
+
+  func_get_device_token() async {
+    //
+    final token = await _firebaseMessaging.getToken();
+
+    //
+    //
+    if (kDebugMode) {
+      print('=============> HERE IS MY DEVICE TOKEN <=============');
+      print('======================================================');
+      print(token);
+      print('======================================================');
+      print('======================================================');
+    }
+    // save token locally
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('deviceToken', token.toString());
+    //
   }
 
   @override

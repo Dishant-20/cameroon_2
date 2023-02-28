@@ -753,6 +753,8 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
 //
   void leave() {
     call_duration_timer.cancel();
+
+    // print(call_duration_timer);
     // countdownTimer!.cancel();
     if (mounted) {
       setState(() {
@@ -795,70 +797,14 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
     }
     return final_initial_name;
   }
-  //
-
-  Future<bool> callOnFcmApiSendPushNotifications(userToken) async {
-    //
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //
-    const postUrl = 'https://fcm.googleapis.com/fcm/send';
-
-    final data = {
-      "notification": {
-        "body": "Incoming audio call",
-        "title": prefs.getString('fullName').toString(),
-      },
-      "priority": "high",
-      "data": {
-        "click_action": "FLUTTER_NOTIFICATION_CLICK",
-        "id": "1",
-        "status": "done",
-        "caller_name": prefs.getString('fullName').toString(),
-        "caller_image": prefs.getString('image').toString(),
-      },
-      // "to": userToken.toString()
-      "to":
-          'eTGr6bDMSOaR7zQzT0577L:APA91bFzUkHG-7nH23eQDW9AgHwR-vpbH9xEmfPWnuIXdbiFQgH7yNaOU8zEESC6rWoMyOirfmxKS9yliV_ihuI-Iml9WNg9m9dd_j9c5vXTmFGHG5JuzJGGEyM7FMdeV1XcQGNBtU0x'
-              .toString()
-    };
-
-    final headers = {
-      'content-type': 'application/json',
-      'Authorization':
-          'key=AAAAm1_Oyvs:APA91bGmD8w-C_3htA9YwjSm1Cwacf0TAMXBeb4ozIqraw3odUjHBfCag4NL9iMmOYHWMYiyxruGE7vYXMscRjzxXmNNlOZLJrgCKynQpWUM7dmf9Le_EJnbgrgQa5LhxwIjrVHgu7a1'
-    };
-
-    final response = await http.post(Uri.parse(postUrl),
-        body: json.encode(data),
-        encoding: Encoding.getByName('utf-8'),
-        headers: headers);
-
-    if (response.statusCode == 200) {
-      // on success do sth
-      print('test ok push CFM');
-      return true;
-    } else {
-      print(' CFM error');
-      // on failure do sth
-      return false;
-    }
-  }
 
   //
-  /*
-  [action] => notitest
-    [Receiver_device] => Android
-    [Receiver_deviceToken] => dUVIPryZQP-GlSD3OxQYjJ:APA91bH87MCeB46JN9VJ87J1w8UeTH5nNomfvYYqJ8dtuz-898MHVVDTfSHMMAZNyx6ht7dneAdeftEzMfV2apiu_6-vxkCbiTRXCd3q3IAWXsut4bZNFm5z_bV8YquO4ASI0uUYTqeK
-    [message] => Audio calling...
-    [channel] => 16+17
-    [name] => s2
-    [image] => https://demo4.evirtualservices.net/cameroon/img/uploads/users/1677232718BUPSC_1677232668485.png
-    [deviceToken] => eTGr6bDMSOaR7zQzT0577L:APA91bFzUkHG-7nH23eQDW9AgHwR-vpbH9xEmfPWnuIXdbiFQgH7yNaOU8zEESC6rWoMyOirfmxKS9yliV_ihuI-Iml9WNg9m9dd_j9c5vXTmFGHG5JuzJGGEyM7FMdeV1XcQGNBtU0x
-    [device] => Android
-    [type] => audioCall */
+
   send_notification() async {
     if (kDebugMode) {
-      print('=====> POST : MY PROFILE LIST');
+      print('=====> POST : SEND AUDIO CALL NOTIFICATION');
+
+      print(widget.get_receiver_data['deviceToken'].toString());
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -881,7 +827,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
           'channel': widget.str_channel_name.toString(),
           'name': prefs.getString('fullName').toString(),
           'image': prefs.getString('image').toString(),
-          'deviceToken': 'my_token',
+          'deviceToken': prefs.getString('deviceToken').toString(),
           'device': 'iOS',
           'type': 'audioCall',
         },
