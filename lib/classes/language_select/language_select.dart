@@ -350,11 +350,15 @@ class _LanguageSelectScreenState extends State<LanguageSelectScreen> {
   //
   func_prefered_language() {
     if (str_select_language == '1') {
-      var locale = const Locale('en_US');
+      //
+      var locale = const Locale('en', 'EN');
       Get.updateLocale(locale);
+      //
     } else if (str_select_language == '2') {
-      var locale = const Locale('fr_FR');
+      //
+      var locale = const Locale('fr', 'FR');
       Get.updateLocale(locale);
+      //
     }
     setState(() {
       if (kDebugMode) {

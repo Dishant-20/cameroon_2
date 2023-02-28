@@ -203,15 +203,13 @@ class _OneToOneChatScreenState extends State<OneToOneChatScreen> {
                 .collection(
                   'message/evs_cameroon_chat/one_to_one_chat',
                 )
-                .orderBy('time_stamp', descending: true)
+                .orderBy('time_stamp', descending: false)
+                // .orderBy('time_stamp')
                 // .limit(20)
-                .where('users', whereIn: ["13+17", "17+13"]
-                    /*whereIn: [
-                // room_id,
-                // reverse_room_id,
-                "13+17", "17+13"
-              ],*/
-                    ).snapshots(),
+                .where('users', arrayContainsAny: [
+              room_id,
+              reverse_room_id,
+            ]).snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 //
@@ -570,7 +568,9 @@ class _OneToOneChatScreenState extends State<OneToOneChatScreen> {
             'room_id': room_id.toString(),
             'sender_id': widget.str_get_login_user_id.toString(),
             'message': str_get_message.toString(),
-            'time_stamp': DateTime.now().millisecondsSinceEpoch,
+            'time_stamp':
+                //Timestamp.now(),
+                DateTime.now().millisecondsSinceEpoch, //
             'room': 'one_to_one',
             'type': 'text',
             'attachment_path': '',
@@ -695,7 +695,9 @@ class _OneToOneChatScreenState extends State<OneToOneChatScreen> {
             'room_id': room_id.toString(),
             'sender_id': widget.str_get_login_user_id.toString(),
             'message': '',
-            'time_stamp': DateTime.now().millisecondsSinceEpoch,
+            'time_stamp':
+                // Timestamp.now(),
+                DateTime.now().millisecondsSinceEpoch,
             'room': 'one_to_one',
             'type': 'image',
             'attachment_path': str_attachment_path.toString(),

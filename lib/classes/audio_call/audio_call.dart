@@ -284,36 +284,63 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
               //   ),
               // ),
               //
-              (str_volume == '0')
-                  ? Align(
-                      alignment: Alignment.center,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            str_volume = '1';
-                            agoraEngine.adjustRecordingSignalVolume(100);
-                          });
-                        },
-                        icon: Icon(
-                          Icons.volume_down_sharp,
-                          // Icons.volume_off_rounded,
-                        ),
-                      ),
-                    )
-                  : Align(
-                      alignment: Alignment.center,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            str_volume = '0';
-                            agoraEngine.adjustRecordingSignalVolume(0);
-                          });
-                        },
-                        icon: Icon(
-                          Icons.volume_off_rounded,
-                        ),
-                      ),
+              (str_show_calling_text == 'remote_user_joined')
+                  ? (str_volume == '0')
+                      ? Align(
+                          alignment: Alignment.center,
+                          child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                str_volume = '1';
+                                agoraEngine.adjustRecordingSignalVolume(100);
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.volume_down_sharp,
+                              // Icons.volume_off_rounded,
+                            ),
+                          ),
+                        )
+                      : Align(
+                          alignment: Alignment.center,
+                          child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                str_volume = '0';
+                                agoraEngine.adjustRecordingSignalVolume(0);
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.volume_off_rounded,
+                            ),
+                          ),
+                        )
+                  : const SizedBox(
+                      height: 0,
                     ),
+
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
+              ///
               //
             ],
           ),
