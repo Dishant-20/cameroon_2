@@ -145,8 +145,12 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         //
 
-        print('object object object object ');
-        print(get_data['data']['deviceToken'].toString());
+        if (kDebugMode) {
+          print('object object object object ');
+        }
+        if (kDebugMode) {
+          print(get_data['data']['deviceToken'].toString());
+        }
 
         if (get_data['data']['deviceToken'].toString() == '') {
           //
@@ -233,7 +237,9 @@ class _Dashboard2ScreenState extends State<Dashboard2Screen> {
       }
     } else {
       // return postList;
-      print('something went wrong');
+      if (kDebugMode) {
+        print('something went wrong');
+      }
     }
   }
 

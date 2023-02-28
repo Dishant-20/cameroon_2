@@ -90,7 +90,9 @@ class _NearbyFriendsScreenState extends State<NearbyFriendsScreen> {
 
     // convert data to dict
     var get_data = jsonDecode(resposne.body);
-    print(get_data);
+    if (kDebugMode) {
+      print(get_data);
+    }
 
     //
     arr_swipe.clear();

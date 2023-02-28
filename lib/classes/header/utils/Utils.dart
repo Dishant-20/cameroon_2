@@ -10,11 +10,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 // import 'dart:ui';
 
-var application_base_url =
-    'https://demo4.evirtualservices.net/cameroon/services/index';
-
 // var application_base_url =
-// 'https://camerron.evirtualservices.co/services/index';
+// 'https://demo4.evirtualservices.net/cameroon/services/index';
+
+var application_base_url =
+    'https://camerron.evirtualservices.co/services/index';
 
 //
 

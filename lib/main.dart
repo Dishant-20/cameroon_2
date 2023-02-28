@@ -83,8 +83,8 @@ void main() async {
     GetMaterialApp(
       translations: LocalString(),
 
-      // locale: const Locale('en', 'EN'),
-      locale: const Locale('fr', 'FR'),
+      locale: const Locale('en', 'EN'),
+      // locale: const Locale('fr', 'FR'),
 
       //
       debugShowCheckedModeBanner: false,
