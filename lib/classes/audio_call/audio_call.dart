@@ -47,6 +47,9 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
   //
   var str_volume = '0';
   //
+  late Timer call_duration_timer;
+  var str_save_timer = '00:00';
+  //
   @override
   void initState() {
     super.initState();
@@ -284,6 +287,20 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
               //   ),
               // ),
               //
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  margin: const EdgeInsets.all(10.0),
+                  color: Colors.transparent,
+                  width: 120,
+                  height: 48.0,
+                  child: Center(
+                    child: text_with_bold_style_black(
+                      str_save_timer.toString(),
+                    ),
+                  ),
+                ),
+              ),
               (str_show_calling_text == 'remote_user_joined')
                   ? (str_volume == '0')
                       ? Align(
@@ -695,6 +712,9 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
             str_show_calling_text = 'remote_user_joined';
             _remoteUid = remoteUid;
           });
+          //
+          func_start_call_timer();
+          //
         },
         onUserOffline: (RtcConnection connection, int remoteUid,
             UserOfflineReasonType reason) {
@@ -702,7 +722,9 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
           if (kDebugMode) {
             print("Remote user uid:$remoteUid left the channel");
           }
-
+          //
+          call_duration_timer.cancel();
+          //
           setState(() {
             str_show_calling_text = 'remote_user_disconnected';
             _remoteUid = null;
@@ -730,6 +752,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
 
 //
   void leave() {
+    call_duration_timer.cancel();
     // countdownTimer!.cancel();
     if (mounted) {
       setState(() {
@@ -903,4 +926,35 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
       agoraEngine.adjustRecordingSignalVolume(volume);
     });
   }
+
+  //
+  func_start_call_timer() {
+    call_duration_timer =
+        Timer.periodic(const Duration(seconds: 1), (call_duration_timer) {
+      //
+      // print(t.tick);
+      // if (call_duration_timer.tick == 20) {
+
+      // }
+
+      int sec = call_duration_timer.tick % 60;
+      if (kDebugMode) {
+        // print(sec);
+      }
+      int min = (call_duration_timer.tick / 60).floor();
+      if (kDebugMode) {
+        // print(min);
+      }
+      //
+      String minute = min.toString().length <= 1 ? "0$min" : "$min";
+      String second = sec.toString().length <= 1 ? "0$sec" : "$sec";
+      if (kDebugMode) {
+        print("$minute : $second");
+      }
+      //
+      str_save_timer = "$minute : $second";
+      setState(() {});
+    });
+  }
+  //
 }

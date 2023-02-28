@@ -37,7 +37,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   //
   var str_login_user_id = '';
   //
-
+  Timer? countdownTimer;
+  Duration myDuration = Duration(seconds: 5);
+  //
   var custom_arr = [];
   List<String> arr_scroll_multiple_images = [];
   //
@@ -72,6 +74,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     print(window.locale.languageCode);
     //
     // startTimer();
+
     //
   }
 
@@ -1453,5 +1456,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     return "${parse.inDays ~/ 360}"; // Years";
     // ${((parse.inDays % 360) ~/ 30)} Month ${(parse.inDays % 360) % 30} Days"
   }
+
+  //
+
   //
 }

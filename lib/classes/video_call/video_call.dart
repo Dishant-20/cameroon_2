@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -39,12 +40,19 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   bool _isJoined = false; // Indicates if the local user has joined the channel
   late RtcEngine agoraEngine; // Agora engine instance
   //
+  var show_loader_to_cancel_agora = '0';
+  //
   var str_click_call_button_status = '0';
   //
   var str_mute_unmute_audio = '0';
   var str_hide_unhide_local_video = '0';
   //
-
+  // late Timer _timer;
+  // int _start = 3;
+  //
+  late Timer call_duration_timer;
+  var str_save_timer = '00:00';
+  //
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>(); // Global key to access the scaffold
 
@@ -62,16 +70,21 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     if (mounted) {
       setupVideoSDKEngine();
     }
+    //
+    //
   }
 
 // Clean up the resources when you leave
   @override
   void dispose() async {
     // if (mounted)
+    // _timer.cancel();
+    //
     await agoraEngine.leaveChannel();
     //
     agoraEngine.release();
     //
+
     super.dispose();
   }
 
@@ -94,14 +107,20 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
               print('');
             }
             //
+            // _timer.cancel();
+            //
             agoraEngine.release();
             //
             Navigator.pop(context);
             //
           },
-          icon: const Icon(
-            Icons.chevron_left,
-          ),
+          icon: (show_loader_to_cancel_agora == '1')
+              ? const SizedBox(
+                  height: 0,
+                )
+              : const Icon(
+                  Icons.chevron_left,
+                ),
         ),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -133,147 +152,48 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
             ),
           ),
           //
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                margin: const EdgeInsets.all(10.0),
-                width: 160,
-                height: 160,
-                decoration: BoxDecoration(
-                  color: Colors.pink,
-                  borderRadius: BorderRadius.circular(
-                    14,
-                  ),
+          (show_loader_to_cancel_agora == '1')
+              ? const SizedBox(
+                  height: 0,
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10.0),
+                      width: 160,
+                      height: 160,
+                      decoration: BoxDecoration(
+                        color: Colors.pink,
+                        borderRadius: BorderRadius.circular(
+                          14,
+                        ),
+                      ),
+                      child: Center(
+                        child: _localPreview(), // my camera
+                      ),
+                    ),
+                  ],
                 ),
-                child: Center(
-                  child: _localPreview(), // my camera
-                ),
-              ),
-            ],
-          ),
           //
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: const EdgeInsets.only(
-                bottom: 40,
-                left: 20,
-                right: 20,
-              ),
-              width: MediaQuery.of(context).size.width,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(
-                  14,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: const Offset(
-                      0,
-                      3,
-                    ), // changes position of shadow
-                  ),
-                ],
-              ),
-              //
-              // str_click_call_button_status
-              //
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: (_isJoined == false)
-                        ? () {
-                            if (kDebugMode) {
-                              print('call hit');
-                              print(_isJoined);
-                            }
-                            //
-                            join();
-                            //
-                            // agoraEngine.switchCamera();
-                            //
-                            send_notification();
-                            //
-                            //
-                          }
-                        : () {
-                            if (kDebugMode) {
-                              print('end call hit');
-                              print(_isJoined);
-                            }
-                            //
-                            leave();
-                            //
-                          },
-                    child: (_isJoined == false)
-                        ? Container(
-                            margin: const EdgeInsets.only(left: 10.0),
-                            width: 120,
-                            height: 48.0,
-                            decoration: BoxDecoration(
-                              color: Colors.green,
-                              borderRadius: BorderRadius.circular(
-                                24,
-                              ),
-                            ),
-                            child: Align(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: (widget.str_from_notification == 'yes')
-                                    ? text_with_bold_style(
-                                        'Accept',
-                                      )
-                                    : text_with_bold_style(
-                                        'Call',
-                                      ),
-                              ),
-                            ),
-                          )
-                        : Container(
-                            margin: const EdgeInsets.only(left: 10.0),
-                            width: 120,
-                            height: 48.0,
-                            decoration: (_isJoined == false)
-                                ? BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(
-                                      24,
-                                    ),
-                                  )
-                                : BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(
-                                      24,
-                                    ),
-                                  ),
-                            child: Align(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: (widget.str_from_notification == 'yes')
-                                    ? text_with_bold_style(
-                                        'Accept',
-                                      )
-                                    : text_with_bold_style(
-                                        'End call',
-                                      ),
-                              ),
-                            ),
-                          ),
-                  ),
-                  // SWITCH CAMERA
-                  Container(
-                    margin: const EdgeInsets.only(left: 20.0),
-                    width: 44,
-                    height: 44,
+          (show_loader_to_cancel_agora == '1')
+              ? const SizedBox(
+                  height: 0,
+                )
+              : Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                      bottom: 40,
+                      left: 20,
+                      right: 20,
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: 60,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(
-                        22,
+                        14,
                       ),
                       boxShadow: [
                         BoxShadow(
@@ -287,74 +207,183 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                         ),
                       ],
                     ),
-                    child: IconButton(
-                      onPressed: () {
-                        if (kDebugMode) {
-                          print('camera switch hit');
-                        }
-                        //
-                        agoraEngine.switchCamera();
-                        //
-                      },
-                      icon: const Icon(
-                        Icons.flip_camera_ios_rounded,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  //
-                  // MUTE / UNMUTE
-                  InkWell(
-                    onTap: () {
-                      if (kDebugMode) {
-                        print('object');
-                      }
-                      //
-                      (str_mute_unmute_audio == '0')
-                          ? func_mute_unmute_local_user_audio(
-                              true) // mute audio
-                          : func_mute_unmute_local_user_audio(
-                              false); // unmute audio
-                      //
-                      setState(() {
-                        if (kDebugMode) {
-                          print(str_mute_unmute_audio);
-                        }
-                      });
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 20.0),
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(
-                          22,
+                    //
+                    // str_click_call_button_status
+                    //
+                    child: Row(
+                      children: [
+                        InkWell(
+                          onTap: (_isJoined == false)
+                              ? () {
+                                  if (kDebugMode) {
+                                    print('call hit');
+                                    print(_isJoined);
+                                  }
+                                  //
+                                  join();
+                                  //
+                                  // agoraEngine.switchCamera();
+                                  //
+                                  send_notification();
+                                  //
+                                  //
+                                }
+                              : () {
+                                  if (kDebugMode) {
+                                    print('end call hit');
+                                    print(_isJoined);
+                                  }
+                                  //
+                                  leave();
+                                  //
+                                },
+                          child: (_isJoined == false)
+                              ? Container(
+                                  margin: const EdgeInsets.only(left: 10.0),
+                                  width: 120,
+                                  height: 48.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(
+                                      24,
+                                    ),
+                                  ),
+                                  child: Align(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: (widget.str_from_notification ==
+                                              'yes')
+                                          ? text_with_bold_style(
+                                              'Accept',
+                                            )
+                                          : text_with_bold_style(
+                                              'Call',
+                                            ),
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  margin: const EdgeInsets.only(left: 10.0),
+                                  width: 120,
+                                  height: 48.0,
+                                  decoration: (_isJoined == false)
+                                      ? BoxDecoration(
+                                          color: Colors.green,
+                                          borderRadius: BorderRadius.circular(
+                                            24,
+                                          ),
+                                        )
+                                      : BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.circular(
+                                            24,
+                                          ),
+                                        ),
+                                  child: Align(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: (widget.str_from_notification ==
+                                              'yes')
+                                          ? text_with_bold_style(
+                                              'End call',
+                                            )
+                                          : text_with_bold_style(
+                                              'End call',
+                                            ),
+                                    ),
+                                  ),
+                                ),
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: const Offset(
-                              0,
-                              3,
-                            ), // changes position of shadow
+                        // SWITCH CAMERA
+                        Container(
+                          margin: const EdgeInsets.only(left: 20.0),
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                              22,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(
+                                  0,
+                                  3,
+                                ), // changes position of shadow
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: (str_mute_unmute_audio == '0')
-                          ? const Icon(
-                              Icons.mic,
-                              color: Colors.black,
-                            )
-                          : const Icon(
-                              Icons.mic_off_rounded,
+                          child: IconButton(
+                            onPressed: () {
+                              if (kDebugMode) {
+                                print('camera switch hit');
+                              }
+                              //
+                              agoraEngine.switchCamera();
+                              //
+                            },
+                            icon: const Icon(
+                              Icons.flip_camera_ios_rounded,
                               color: Colors.black,
                             ),
-                    ),
-                  ),
-                  // HIDE / UNHIDE LOCAL CAMERA
+                          ),
+                        ),
+                        //
+                        // MUTE / UNMUTE
+                        InkWell(
+                          onTap: () {
+                            if (kDebugMode) {
+                              print('object');
+                            }
+                            //
+                            (str_mute_unmute_audio == '0')
+                                ? func_mute_unmute_local_user_audio(
+                                    true) // mute audio
+                                : func_mute_unmute_local_user_audio(
+                                    false); // unmute audio
+                            //
+                            setState(() {
+                              if (kDebugMode) {
+                                print(str_mute_unmute_audio);
+                              }
+                            });
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 20.0),
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(
+                                22,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: const Offset(
+                                    0,
+                                    3,
+                                  ), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: (str_mute_unmute_audio == '0')
+                                ? const Icon(
+                                    Icons.mic,
+                                    color: Colors.black,
+                                  )
+                                : const Icon(
+                                    Icons.mic_off_rounded,
+                                    color: Colors.black,
+                                  ),
+                          ),
+                        ),
+                        /*// HIDE / UNHIDE LOCAL CAMERA
                   InkWell(
                     onTap: () {
                       (str_hide_unhide_local_video == '0')
@@ -400,67 +429,64 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                               color: Colors.red,
                             ),
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-      /*ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        children: [
-          // Container for the local video
-          Container(
-            height: 240,
-            decoration: BoxDecoration(border: Border.all()),
-            child: Center(child: _localPreview()),
-          ),
-          const SizedBox(height: 10),
-          //Container for the Remote video
-          Container(
-            height: 240,
-            decoration: BoxDecoration(border: Border.all()),
-            child: Center(child: _remoteVideo()),
-          ),
-          // Button Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _isJoined
-                      ? null
-                      : () => {
-                            join(),
-                            //
-                            send_notification(),
-                            //
-                          },
-                  child: (widget.str_from_notification == 'yes')
-                      ? const Text(
-                          "Accept",
+                  )*/
+
+                        //
+                        Expanded(
+                          child: Center(
+                            child: text_with_bold_style_black(
+                              str_save_timer.toString(),
+                            ),
+                          ),
                         )
-                      : const Text(
-                          "Call",
-                        ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _isJoined ? () => {leave()} : null,
-                  child: const Text(
-                    "End call",
+                        //
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          // Button Row ends
+          //
+          (show_loader_to_cancel_agora == '0')
+              ? const SizedBox(
+                  height: 0,
+                )
+              : Align(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 100.0),
+                    color: Colors.transparent,
+                    // width: 48.0,
+                    height: 80,
+                    child: Column(
+                      children: [
+                        const CircularProgressIndicator(
+                          color: Colors.black,
+                        ),
+                        //
+                        text_with_regular_style('please wait...')
+                      ],
+                    ),
+                  ),
+                ),
+          //
         ],
-      ),*/
+      ),
     );
+  }
+
+  func_timer_to_end_call() {
+    setState(() {
+      show_loader_to_cancel_agora = '1';
+    });
+    Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      //
+      if (t.tick == 4) {
+        t.cancel();
+        show_loader_to_cancel_agora = '0';
+        call_duration_timer.cancel();
+        //
+        Navigator.pop(context);
+        //
+      }
+    });
   }
 
   // Display local video preview
@@ -474,7 +500,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
       );
     } else {
       return const Text(
-        'Click call to connect',
+        '',
         textAlign: TextAlign.center,
       );
     }
@@ -533,6 +559,9 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
             _remoteUid = remoteUid;
             // _isJoined = true;
           });
+          //
+          func_start_call_timer();
+
           // leave();
         },
         onUserOffline: (RtcConnection connection, int remoteUid,
@@ -545,12 +574,11 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
 
           setState(() {
             _remoteUid = null;
+            call_duration_timer.cancel();
           });
           //
           leave();
-          // setState(() {
-          // _isJoined = true;
-          // });
+
           //
         },
       ),
@@ -574,13 +602,19 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     );
   }
 
-  void leave() {
+  void leave() async {
     setState(() {
       _isJoined = false;
       _remoteUid = null;
     });
-    agoraEngine.leaveChannel();
-    // agoraEngine.release();
+    await agoraEngine.leaveChannel();
+    await agoraEngine.release();
+    //
+
+    //
+    func_timer_to_end_call();
+
+    //
   }
 
   //
@@ -663,4 +697,35 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     agoraEngine.muteLocalVideoStream(video_stream_status);
     //
   }
+
+  //
+  func_start_call_timer() {
+    call_duration_timer =
+        Timer.periodic(const Duration(seconds: 1), (call_duration_timer) {
+      //
+      // print(t.tick);
+      // if (call_duration_timer.tick == 20) {
+
+      // }
+
+      int sec = call_duration_timer.tick % 60;
+      if (kDebugMode) {
+        // print(sec);
+      }
+      int min = (call_duration_timer.tick / 60).floor();
+      if (kDebugMode) {
+        // print(min);
+      }
+      //
+      String minute = min.toString().length <= 1 ? "0$min" : "$min";
+      String second = sec.toString().length <= 1 ? "0$sec" : "$sec";
+      if (kDebugMode) {
+        print("$minute : $second");
+      }
+      //
+      str_save_timer = "$minute : $second";
+      setState(() {});
+    });
+  }
+  //
 }
