@@ -29,6 +29,7 @@ class OneToOneChatScreen extends StatefulWidget {
       required this.str_get_friend_name,
       required this.str_get_friend_image,
       required this.str_get_friend_device_token,
+      required this.str_get_friend_device,
       this.get_full_data});
 
   final get_full_data;
@@ -37,6 +38,7 @@ class OneToOneChatScreen extends StatefulWidget {
   final String str_get_friend_name;
   final String str_get_friend_image;
   final String str_get_friend_device_token;
+  final String str_get_friend_device;
 
   @override
   State<OneToOneChatScreen> createState() => _OneToOneChatScreenState();
@@ -174,6 +176,8 @@ class _OneToOneChatScreenState extends State<OneToOneChatScreen> {
                       str_device_token:
                           widget.str_get_friend_device_token.toString(),
                       str_channel_name: room_id.toString(),
+                      str_get_device_name:
+                          widget.str_get_friend_device.toString(),
                     ),
                   ),
                 );

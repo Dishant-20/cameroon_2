@@ -19,14 +19,16 @@ import 'package:flutter/material.dart';
 import '../gallery/enlarge_image/enlarge_image.dart';
 
 class ProfileDetailsScreen extends StatefulWidget {
-  const ProfileDetailsScreen(
-      {super.key,
-      required this.str_user_profile_id,
-      required this.str_profile_notification,
-      required this.str_friend_device_token});
+  const ProfileDetailsScreen({
+    super.key,
+    required this.str_user_profile_id,
+    required this.str_profile_notification,
+    required this.str_friend_device_token,
+  });
 
   final String str_friend_device_token;
   final String str_profile_notification;
+
   final String str_user_profile_id;
 
   @override
@@ -62,6 +64,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   var str_interested_in = '';
 
   var str_device_token = '';
+  var str_friend_device = '';
   //
   // late Timer myTimer;
   // Duration myDuration = Duration();
@@ -71,7 +74,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     super.initState();
     //
     profile_details_WB();
-    print(window.locale.languageCode);
+    if (kDebugMode) {
+      print(window.locale.languageCode);
+    }
     //
     // startTimer();
 
@@ -154,7 +159,12 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
         str_address = get_data['data']['address'].toString();
         str_both_profile_matched = get_data['data']['bothLiked'].toString();
 
+        str_friend_device = get_data['data']['device'].toString();
         str_device_token = get_data['data']['deviceToken'].toString();
+
+        print('device token');
+        print(str_friend_device);
+        print(str_device_token);
 
         if (prefs.getString('interent_in').toString() == '1') {
           str_interested_in = 'Male';
@@ -480,6 +490,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                           if (kDebugMode) {
                                             print('');
                                           }
+
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -496,8 +507,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                                 str_get_friend_image:
                                                     str_image.toString(),
                                                 str_get_friend_device_token:
-                                                    widget
-                                                        .str_friend_device_token
+                                                    str_device_token.toString(),
+                                                str_get_friend_device:
+                                                    str_friend_device
                                                         .toString(),
                                               ),
                                             ),

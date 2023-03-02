@@ -643,7 +643,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           'channel': widget.str_channel_name.toString(),
           'name': prefs.getString('fullName').toString(),
           'image': prefs.getString('image').toString(),
-          'deviceToken': 'my_token',
+          'deviceToken': prefs.getString('deviceToken').toString(),
           'device': 'iOS',
           'type': 'videoCall',
         },
@@ -662,13 +662,17 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
 
         //
       } else {
-        print(
-          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
-        );
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
       }
     } else {
       // return postList;
-      print('something went wrong');
+      if (kDebugMode) {
+        print('something went wrong');
+      }
     }
   }
 

@@ -161,6 +161,7 @@ class _SplashScreenState extends State<SplashScreen> {
               str_friend_name: remoteMessage.data['name'].toString(),
               str_device_token: '',
               str_channel_name: remoteMessage.data['channel'].toString(),
+              str_get_device_name: remoteMessage.data['device'].toString(),
             ),
           ),
         );

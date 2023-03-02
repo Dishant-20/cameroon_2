@@ -21,7 +21,8 @@ class AudioCallScreen extends StatefulWidget {
       required this.str_friend_name,
       required this.str_device_token,
       this.get_receiver_data,
-      required this.str_channel_name});
+      required this.str_channel_name,
+      required this.str_get_device_name});
 
   final get_receiver_data;
   final String str_friend_name;
@@ -29,6 +30,7 @@ class AudioCallScreen extends StatefulWidget {
   final String str_friend_image;
   final String str_device_token;
   final String str_channel_name;
+  final String str_get_device_name;
 
   @override
   State<AudioCallScreen> createState() => _AudioCallScreenState();
@@ -60,6 +62,9 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
     if (mounted) {
       setupVoiceSDKEngine();
     }
+
+    print('======> rajputana');
+    print(widget.str_device_token);
 
     if (kDebugMode) {
       print('rajputana');
@@ -804,7 +809,9 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
     if (kDebugMode) {
       print('=====> POST : SEND AUDIO CALL NOTIFICATION');
 
-      print(widget.get_receiver_data['deviceToken'].toString());
+      print('DISHANT RAJPUT');
+      print(widget.str_get_device_name);
+      print(widget.str_device_token);
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -822,7 +829,6 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
           'Receiver_device': widget.get_receiver_data['device'].toString(),
           'Receiver_deviceToken':
               widget.get_receiver_data['deviceToken'].toString(),
-          // 'ffKEmMiYQcejA8XFNKAePh:APA91bEtVZU-4tHltFsmA3dz8zUP8Sv1BB14UH0cZVaNAWLiHyEULkTw7I1JbfS-DEMfrRpN5sZVd62ANRXdOaUI3QfYrqRKNVkAZoA6oZosHYhLMSh5Hi_1YXcx1W7DED-f_FdsZcoy',
           'message': 'Audio calling...',
           'channel': widget.str_channel_name.toString(),
           'name': prefs.getString('fullName').toString(),
